@@ -1,10 +1,10 @@
 import {createElement} from '../render.js';
 
-const createShowMoreButton = () => '<button class="films-list__show-more">Show more</button>';
+const createFilmsList = () => '<section class="films-list"></section>';
 
-export default class ShowMoreButtonView {
+export default class FilmsListView {
   getTemplate() {
-    return createShowMoreButton();
+    return createFilmsList();
   }
 
   getElement() {
