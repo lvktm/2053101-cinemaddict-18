@@ -1,7 +1,7 @@
 import UserRankView from './view/user-rank-view.js';
 import {render} from './render.js';
 import CinemaddictPresenter from './presenter/cinemaddict-presenter.js';
-import FooterStatisticView from './view/footer-statistic.js';
+import FooterStatisticView from './view/footer-statistic-view.js';
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
