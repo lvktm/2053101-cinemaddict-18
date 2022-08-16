@@ -1,20 +1,30 @@
 import {createElement} from '../render.js';
 
-const createFilmCard = (titles) => {
-  const {title} = titles;
+const createFilmCard = (movie) => {
+  const {filmInfo: {
+    title,
+    poster,
+    release: {
+      date
+    },
+    totalRating,
+    runtime,
+    description}
+  } = movie;
+
 
   return (
     `<article class="film-card">
   <a class="film-card__link">
     <h3 class="film-card__title">${ title }</h3>
-    <p class="film-card__rating">9.0</p>
+    <p class="film-card__rating">${ totalRating }</p>
     <p class="film-card__info">
-      <span class="film-card__year">1955</span>
-      <span class="film-card__duration">1h 59m</span>
+      <span class="film-card__year">${ date }</span>
+      <span class="film-card__duration">${ runtime }</span>
       <span class="film-card__genre">Drama</span>
     </p>
-    <img src="./images/posters/the-man-with-the-golden-arm.jpg" alt="" class="film-card__poster">
-    <p class="film-card__description">Frankie Machine (Frank Sinatra) is released from the federal Narcotic Farm in Lexington, Kentucky with a set of drums and a new outlook on…</p>
+    <img src= ${ poster } alt="" class="film-card__poster">
+    <p class="film-card__description">${description}</p>
     <span class="film-card__comments">18 comments</span>
   </a>
   <div class="film-card__controls">
@@ -25,12 +35,12 @@ const createFilmCard = (titles) => {
 </article>`);};
 
 export default class FilmCardView {
-  constructor(title) {
-    this.title = title;
+  constructor(movie) {
+    this.movie = movie;
   }
 
   getTemplate() {
-    return createFilmCard(this.title);
+    return createFilmCard(this.movie);
   }
 
   getElement() {

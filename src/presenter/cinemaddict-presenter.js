@@ -6,7 +6,6 @@ import FilterView from '../view/filter-view.js';
 import SortView from '../view/sort-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import { render } from '../render';
-import {FILM_CARD_VIEW_AMOUNT} from '../data.js';
 
 export default class CinemaddictPresenter {
   filmsComponent = new FilmsTemplateView();
