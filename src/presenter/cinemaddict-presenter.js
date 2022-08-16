@@ -13,8 +13,12 @@ export default class CinemaddictPresenter {
   filmsListComponent = new FilmsListView();
   filmsListContainerComponent = new FilmsListContainerView();
 
-  init = (cinemaddictContainer) => {
+  init = (cinemaddictContainer, movieModel) => {
     this.cinemaddictContainer = cinemaddictContainer;
+    this.movieModel = movieModel;
+    this.movies = [...this.movieModel.getMovies()];
+
+    console.log(this.movies);
 
     render(new FilterView(), this.cinemaddictContainer);
     render(new SortView(), this.cinemaddictContainer);
@@ -22,8 +26,8 @@ export default class CinemaddictPresenter {
     render(this.filmsListComponent, this.filmsComponent.getElement());
     render(this.filmsListContainerComponent, this.filmsListComponent.getElement());
 
-    for(let i = 0; i <= FILM_CARD_VIEW_AMOUNT; i++) {
-      render(new FilmCardView(), this.filmsListContainerComponent.getElement());
+    for(let i = 0; i <= this.movies.length; i++) {
+      render(new FilmCardView(this.movies[i]), this.filmsListContainerComponent.getElement());
     }
 
     render(new ShowMoreButtonView(), this.cinemaddictContainer);

@@ -1,9 +1,12 @@
 import {createElement} from '../render.js';
 
-const createFilmCard = () => (
-  `<article class="film-card">
+const createFilmCard = (titles) => {
+  const {title} = titles;
+
+  return (
+    `<article class="film-card">
   <a class="film-card__link">
-    <h3 class="film-card__title">The Man with the Golden Arm</h3>
+    <h3 class="film-card__title">${ title }</h3>
     <p class="film-card__rating">9.0</p>
     <p class="film-card__info">
       <span class="film-card__year">1955</span>
@@ -19,11 +22,15 @@ const createFilmCard = () => (
     <button class="film-card__controls-item film-card__controls-item--mark-as-watched film-card__controls-item--active" type="button">Mark as watched</button>
     <button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
   </div>
-</article>`);
+</article>`);};
 
 export default class FilmCardView {
+  constructor(title) {
+    this.title = title;
+  }
+
   getTemplate() {
-    return createFilmCard();
+    return createFilmCard(this.title);
   }
 
   getElement() {
