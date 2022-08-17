@@ -9,6 +9,7 @@ const createFilmCard = (movie) => {
     },
     totalRating,
     runtime,
+    genre,
     description}
   } = movie;
 
@@ -21,7 +22,7 @@ const createFilmCard = (movie) => {
     <p class="film-card__info">
       <span class="film-card__year">${ date }</span>
       <span class="film-card__duration">${ runtime }</span>
-      <span class="film-card__genre">Drama</span>
+      <span class="film-card__genre">${ genre }</span>
     </p>
     <img src= ${ poster } alt="" class="film-card__poster">
     <p class="film-card__description">${description}</p>

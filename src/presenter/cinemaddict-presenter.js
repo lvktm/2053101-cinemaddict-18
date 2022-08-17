@@ -17,8 +17,6 @@ export default class CinemaddictPresenter {
     this.movieModel = movieModel;
     this.movies = [...this.movieModel.getMovies()];
 
-    console.log(this.movies);
-
     render(new FilterView(), this.cinemaddictContainer);
     render(new SortView(), this.cinemaddictContainer);
     render(this.filmsComponent, this.cinemaddictContainer);

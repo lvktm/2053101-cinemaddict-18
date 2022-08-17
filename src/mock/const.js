@@ -1,3 +1,6 @@
+const MIN_MINUTES = 30;
+const MAX_MINUTES = 250;
+
 const titles = [
   'The Great Flamarion',
   'Santa Claus Conquers the Martians',
@@ -30,5 +33,63 @@ const descriptions = [
   'In rutrum ac purus sit amet tempus.'
 ];
 
-export {titles, posters, descriptions};
+const ageRatings = [
+  '3+',
+  '6+',
+  '12+',
+  '18+'
+];
+
+const directors = [
+  'Tom Ford',
+  'Cristian Dior',
+  'Alex Sallor',
+  'Antony Blinken',
+  'Serge Paul',
+  'Satoshi Nakomoto'
+];
+
+const writers = [
+  'Jessica Alba',
+  'Konstantin Lee',
+  'Rudolf Aceberg',
+  'Luish Figu',
+  'Arnold Shartch'
+];
+
+const actors = [
+  'Tom Cruze',
+  'Elizabet Cutcher',
+  'Sara Jhon',
+  'Rebecca Look',
+  'Peter Parker',
+  'Silvester Stallone',
+  'Santa Monica'
+];
+
+const countries = [
+  'Belarus',
+  'Bulgary',
+  'Canada',
+  'Ukraina',
+  'USA',
+  'Italy',
+  'Madagaskar',
+  'Makedony',
+  'Montenegro',
+  'Chili',
+  'Yamayka'
+];
+
+const genres = [
+  'Comedy',
+  'Drama',
+  'Trailer',
+  'Histiry',
+  'Documental'
+];
+
+export {titles, posters, descriptions,
+  ageRatings, directors, writers, actors,
+  countries, genres, MIN_MINUTES, MAX_MINUTES};
 
