@@ -89,7 +89,24 @@ const genres = [
   'Documental'
 ];
 
+const comments = [
+  'a film that changed my life',
+  'a true masterpiece',
+  'post-credit scene was just amazing omg.'
+];
+
+const authors = [
+  'Stepah Dali',
+  'Elizabeth Parker',
+  'Dark Wader',
+  'Shon Penn',
+  'Harry Mitchell'
+];
+
+const emotions = ['smile', 'sleeping', 'puke', 'angry'];
+
 export {titles, posters, descriptions,
   ageRatings, directors, writers, actors,
-  countries, genres, MIN_MINUTES, MAX_MINUTES};
+  countries, genres, MIN_MINUTES, MAX_MINUTES,
+  comments, authors, emotions};
 

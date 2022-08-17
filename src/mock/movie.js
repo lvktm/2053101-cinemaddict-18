@@ -2,7 +2,11 @@ import dayjs from 'dayjs';
 import { getRandomInteger, getRandomElement, humanizeReleaseDate } from '../util.js';
 import { titles, posters, descriptions, ageRatings, directors, writers, actors, countries,
   MAX_MINUTES, MIN_MINUTES, genres } from './const.js';
+import duration from 'dayjs/plugin/duration'; // ES 2015
 
+dayjs.extend(duration); // использование плагина
+
+// console.log(dayjs.duration({minutes: 77}).format('mm'));
 
 const generateTitle = () => getRandomElement(titles);
 const generatAlternativeTitle = () => getRandomElement(descriptions);

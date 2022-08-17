@@ -7,6 +7,8 @@ import SortView from '../view/sort-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import { render } from '../render';
 
+const consol = (evt) => console.log(evt.target);
+
 export default class CinemaddictPresenter {
   filmsComponent = new FilmsTemplateView();
   filmsListComponent = new FilmsListView();
@@ -23,7 +25,7 @@ export default class CinemaddictPresenter {
     render(this.filmsListComponent, this.filmsComponent.getElement());
     render(this.filmsListContainerComponent, this.filmsListComponent.getElement());
 
-    for(let i = 0; i <= this.movies.length; i++) {
+    for(let i = 0; i < this.movies.length; i++) {
       render(new FilmCardView(this.movies[i]), this.filmsListContainerComponent.getElement());
     }
 

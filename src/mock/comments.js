@@ -1,21 +1,14 @@
-import { getRandomInteger } from '../util';
+import { getRandomInteger, getRandomElement } from '../util.js';
+import { comments, authors, emotions } from './const.js';
 
-const generateComment = () => {
-  const COMMENTS = [
-    'a film that changed my life',
-    'a true masterpiece',
-    'post-credit scene was just amazing omg.'
-  ];
-
-  const getRandomIndex = getRandomInteger(0, COMMENTS.length - 1);
-
-  return COMMENTS[getRandomIndex];
-};
+const generateComment = () => getRandomElement(comments);
+const generateAuthor = () => getRandomElement(authors);
+const generateEmotion = () => getRandomElement(emotions);
 
 export const generateFullComment = () => ({
   'id': '42',
-  'author': 'Ilya O\'Reilly',
+  'author': generateAuthor(),
   'comment': generateComment(),
   'date': '2019-05-11T16:12:32.554Z',
-  'emotion': 'smile'
+  'emotion': generateEmotion()
 });
