@@ -1,12 +1,13 @@
-import { getRandomInteger, getRandomElement } from '../util.js';
+import { getRandomInteger, getRandomElement, randomYearMonthDay } from '../util.js';
 import { titles, posters, descriptions, ageRatings, directors, writers, actors, countries,
-  MAX_MINUTES, MIN_MINUTES, genres, dates, watchingDateMinutesAgo } from './const.js';
+  MAX_MINUTES, MIN_MINUTES, genres, releaseDates, watchingDateMinutesAgo } from './const.js';
 import dayjs from 'dayjs';
 import objectSupport from 'dayjs/plugin/objectSupport'; // ES 2015
 import relativeTime from 'dayjs/plugin/relativeTime'; // ES 2015
 
 dayjs.extend(objectSupport); // использование плагина
 dayjs.extend(relativeTime); // использование плагина
+
 
 const generateTitle = () => getRandomElement(titles);
 const generatAlternativeTitle = () => getRandomElement(descriptions);
@@ -15,7 +16,7 @@ const generatePoster = () => getRandomElement(posters);
 const generateAgeRating = () => getRandomElement(ageRatings);
 const generateDirector = () => getRandomElement(directors);
 const generateWritersOrActorsOrGenres = (elements) => {
-  const namesCount = getRandomInteger(0, 3);
+  const namesCount = getRandomInteger(0, 2);
   const filmNames = [];
   for(let i = 0; i <= namesCount; i++) {
     filmNames.push(getRandomElement(elements));
@@ -23,10 +24,9 @@ const generateWritersOrActorsOrGenres = (elements) => {
   return filmNames;
 };
 const generateCountries = () => getRandomElement(countries);
-const generateReleaseDate = () => {
-  const randomYear = getRandomInteger(dates.MIN, dates.MAX);
-  return dayjs({year: randomYear}).toDate();
-};
+
+const generateReleaseDate = () => randomYearMonthDay(releaseDates.MIN, releaseDates.MAX);
+
 const generateRauntime = () => getRandomInteger(MIN_MINUTES, MAX_MINUTES);
 const generateDescription = () => getRandomElement(descriptions);
 const isTrueOrFalse = () => getRandomInteger(0, 1) === 1;

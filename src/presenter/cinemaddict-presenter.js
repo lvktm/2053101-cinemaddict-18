@@ -13,10 +13,10 @@ const onClosePopupButtonClick = (filmCardDetailComponent) => () => {
   filmCardDetailComponent.getElement().remove();
 };
 
-const onFilmCardClick = (cinemaddictContainer) => (evt) => {
+const onFilmCardClick = (cinemaddictContainer, movie) => (evt) => {
   const currentElement = evt.target;
   if(currentElement.closest('.film-card')) {
-    const filmCardDetailComponent = new FilmCardDetailView();
+    const filmCardDetailComponent = new FilmCardDetailView(movie);
     render(filmCardDetailComponent, cinemaddictContainer);
     const closePopupButton = filmCardDetailComponent.getElement().querySelector('.film-details__close-btn');
     closePopupButton.addEventListener('click', onClosePopupButtonClick(filmCardDetailComponent));
@@ -45,7 +45,7 @@ export default class CinemaddictPresenter {
 
     render(new ShowMoreButtonView(), this.cinemaddictContainer);
 
-    this.filmsComponent.getElement().addEventListener('click', onFilmCardClick(this.cinemaddictContainer));
+    this.filmsComponent.getElement().addEventListener('click', onFilmCardClick(this.cinemaddictContainer, this.movies[0]));
 
   };
 }

@@ -1,5 +1,5 @@
 const MIN_MINUTES = 30;
-const MAX_MINUTES = 250;
+const MAX_MINUTES = 150;
 
 const titles = [
   'The Great Flamarion',
@@ -71,7 +71,7 @@ const countries = [
   'Belarus',
   'Bulgary',
   'Canada',
-  'Ukraina',
+  'Ukraine',
   'USA',
   'Italy',
   'Madagaskar',
@@ -81,9 +81,9 @@ const countries = [
   'Yamayka'
 ];
 
-const dates = {
+const releaseDates = {
   MIN: 1938,
-  MAX: 2001
+  MAX: 1980
 };
 
 const watchingDateMinutesAgo = 1500000;
@@ -93,7 +93,7 @@ const genres = [
   'Drama',
   'Trailer',
   'Histiry',
-  'Documental'
+  'Child'
 ];
 
 const comments = [
@@ -114,6 +114,6 @@ const emotions = ['smile', 'sleeping', 'puke', 'angry'];
 
 export {titles, posters, descriptions,
   ageRatings, directors, writers, actors,
-  countries, dates, watchingDateMinutesAgo, genres, MIN_MINUTES, MAX_MINUTES,
+  countries, releaseDates, watchingDateMinutesAgo, genres, MIN_MINUTES, MAX_MINUTES,
   comments, authors, emotions};
 
