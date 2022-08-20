@@ -1,10 +1,7 @@
 import {createElement} from '../render.js';
 
-const createFilmCardDetail = (titles) => {
-  const {title} = titles;
-
-  return (
-    `<section class="film-details">
+const createFilmCardDetail = () => (
+  `<section class="film-details">
     <div class="film-details__inner">
       <div class="film-details__top-container">
         <div class="film-details__close">
@@ -167,15 +164,15 @@ const createFilmCardDetail = (titles) => {
         </section>
       </div>
     </div>
-  </section>`);};
+  </section>`);
 
 export default class FilmCardDetailView {
-  constructor(title) {
-    this.title = title;
+  constructor(movie) {
+    this.movie = movie;
   }
 
   getTemplate() {
-    return createFilmCardDetail(this.title);
+    return createFilmCardDetail(this.movie);
   }
 
   getElement() {

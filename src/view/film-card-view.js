@@ -1,4 +1,5 @@
 import {createElement} from '../render.js';
+import { humanizeReleaseDate, formatMinutesToTime } from '../util.js';
 
 const createFilmCard = (movie) => {
   const {filmInfo: {
@@ -13,6 +14,8 @@ const createFilmCard = (movie) => {
     description}
   } = movie;
 
+  const releaseDate = humanizeReleaseDate(date);
+  const filmRuntime = formatMinutesToTime(runtime);
 
   return (
     `<article class="film-card">
@@ -20,8 +23,8 @@ const createFilmCard = (movie) => {
     <h3 class="film-card__title">${ title }</h3>
     <p class="film-card__rating">${ totalRating }</p>
     <p class="film-card__info">
-      <span class="film-card__year">${ date }</span>
-      <span class="film-card__duration">${ runtime }</span>
+      <span class="film-card__year">${ releaseDate }</span>
+      <span class="film-card__duration">${ filmRuntime }</span>
       <span class="film-card__genre">${ genre }</span>
     </p>
     <img src= ${ poster } alt="" class="film-card__poster">

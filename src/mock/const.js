@@ -81,6 +81,13 @@ const countries = [
   'Yamayka'
 ];
 
+const dates = {
+  MIN: 1938,
+  MAX: 2001
+};
+
+const watchingDateMinutesAgo = 1500000;
+
 const genres = [
   'Comedy',
   'Drama',
@@ -107,6 +114,6 @@ const emotions = ['smile', 'sleeping', 'puke', 'angry'];
 
 export {titles, posters, descriptions,
   ageRatings, directors, writers, actors,
-  countries, genres, MIN_MINUTES, MAX_MINUTES,
+  countries, dates, watchingDateMinutesAgo, genres, MIN_MINUTES, MAX_MINUTES,
   comments, authors, emotions};
 

@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration'; // ES 2015
+dayjs.extend(duration); // использование плагина
 
 // Функция из интернета по генерации случайного числа из диапазона
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
@@ -13,7 +15,13 @@ const getRandomElement = (elements) => elements[getRandomInteger(0, elements.len
 
 const humanizeReleaseDate = (releaseDate) => dayjs(releaseDate).format('YYYY');
 
+const formatMinutesToTime = (minutes) => dayjs.duration(minutes, 'minutes').format('H[h] mm[mm]');
+
+const isEsc = (evt) => evt.key === 'Escape';
+
 export {getRandomInteger,
   humanizeReleaseDate,
-  getRandomElement
+  formatMinutesToTime,
+  getRandomElement,
+  isEsc
 };

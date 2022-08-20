@@ -1,12 +1,12 @@
-import dayjs from 'dayjs';
-import { getRandomInteger, getRandomElement, humanizeReleaseDate } from '../util.js';
+import { getRandomInteger, getRandomElement } from '../util.js';
 import { titles, posters, descriptions, ageRatings, directors, writers, actors, countries,
-  MAX_MINUTES, MIN_MINUTES, genres } from './const.js';
-import duration from 'dayjs/plugin/duration'; // ES 2015
+  MAX_MINUTES, MIN_MINUTES, genres, dates, watchingDateMinutesAgo } from './const.js';
+import dayjs from 'dayjs';
+import objectSupport from 'dayjs/plugin/objectSupport'; // ES 2015
+import relativeTime from 'dayjs/plugin/relativeTime'; // ES 2015
 
-dayjs.extend(duration); // использование плагина
-
-// console.log(dayjs.duration({minutes: 77}).format('mm'));
+dayjs.extend(objectSupport); // использование плагина
+dayjs.extend(relativeTime); // использование плагина
 
 const generateTitle = () => getRandomElement(titles);
 const generatAlternativeTitle = () => getRandomElement(descriptions);
@@ -23,10 +23,17 @@ const generateWritersOrActorsOrGenres = (elements) => {
   return filmNames;
 };
 const generateCountries = () => getRandomElement(countries);
-const generateReleaseDate = () => humanizeReleaseDate(dayjs());
+const generateReleaseDate = () => {
+  const randomYear = getRandomInteger(dates.MIN, dates.MAX);
+  return dayjs({year: randomYear}).toDate();
+};
 const generateRauntime = () => getRandomInteger(MIN_MINUTES, MAX_MINUTES);
 const generateDescription = () => getRandomElement(descriptions);
 const isTrueOrFalse = () => getRandomInteger(0, 1) === 1;
+const generateWatchingDate = () => {
+  const randomMinutes = getRandomInteger(-watchingDateMinutesAgo, 0);
+  return dayjs().add(randomMinutes, 'minutes').toDate();
+};
 
 export const generateMovie = () => ({
   id: 0,
@@ -53,7 +60,7 @@ export const generateMovie = () => ({
   userDetails: {
     watchlist: isTrueOrFalse(),
     alreadyWatched: isTrueOrFalse(),
-    watchingDate: '2019-04-12T16:12:32.554Z',
+    watchingDate: generateWatchingDate(),
     favorite: isTrueOrFalse()
   }
 });
