@@ -13,5 +13,4 @@ const movieModel = new MovieModel();
 render(new UserRankView(), siteHeaderElement);
 render(new FooterStatisticView(), siteFooterElement);
 
-// cinemaddictPresenter.init(siteMainElement);debugger;
 cinemaddictPresenter.init(siteMainElement, movieModel);
