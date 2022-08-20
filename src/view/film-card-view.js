@@ -2,20 +2,22 @@ import {createElement} from '../render.js';
 import { humanizeReleaseDate, formatMinutesToTime } from '../util.js';
 
 const createFilmCard = (movie) => {
-  const {filmInfo: {
-    title,
-    poster,
-    release: {
-      date
-    },
-    totalRating,
-    runtime,
-    genre,
-    description}
+  const {comments,
+    filmInfo: {
+      title,
+      poster,
+      release: {
+        date
+      },
+      totalRating,
+      runtime,
+      genre,
+      description}
   } = movie;
 
   const releaseDate = humanizeReleaseDate(date);
   const filmRuntime = formatMinutesToTime(runtime);
+  const commentsCount = Array.from(comments).length;
 
   return (
     `<article class="film-card">
@@ -29,7 +31,7 @@ const createFilmCard = (movie) => {
     </p>
     <img src= ${ poster } alt="" class="film-card__poster">
     <p class="film-card__description">${description}</p>
-    <span class="film-card__comments">18 comments</span>
+    <span class="film-card__comments">${ commentsCount } comments</span>
   </a>
   <div class="film-card__controls">
     <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>

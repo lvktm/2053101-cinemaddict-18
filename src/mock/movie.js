@@ -8,10 +8,17 @@ import relativeTime from 'dayjs/plugin/relativeTime'; // ES 2015
 dayjs.extend(objectSupport); // использование плагина
 dayjs.extend(relativeTime); // использование плагина
 
+const generateComments = () => {
+  const comments = new Set();
+  for(let i = 0; i < 10; i++) {
+    comments.add(getRandomInteger(1, 10));
+  }
+  return comments;
+};
 
 const generateTitle = () => getRandomElement(titles);
 const generatAlternativeTitle = () => getRandomElement(descriptions);
-const generateRaiting = () => Math.round((Math.random() * 100)) / 10;
+const generateRaiting = () => getRandomInteger(1, 10);
 const generatePoster = () => getRandomElement(posters);
 const generateAgeRating = () => getRandomElement(ageRatings);
 const generateDirector = () => getRandomElement(directors);
@@ -36,10 +43,8 @@ const generateWatchingDate = () => {
 };
 
 export const generateMovie = () => ({
-  id: 0,
-  comments: [
-    '12', '34'
-  ],
+  id: getRandomInteger(1, 1000),
+  comments: generateComments(),
   filmInfo: {
     title: generateTitle(),
     alternativeTitle: generatAlternativeTitle(),
