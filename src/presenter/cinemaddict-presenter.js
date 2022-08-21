@@ -1,12 +1,12 @@
-import FilmsTemplateView from '../view/films-template-view';
-import FilmsListView from '../view/films-list-view';
-import FilmsListContainerView from '../view/films-list-container-view';
-import FilmCardView from '../view/film-card-view';
-import FilterView from '../view/filter-view.js';
-import SortView from '../view/sort-view';
-import ShowMoreButtonView from '../view/show-more-button-view';
-import FilmCardDetailView from '../view/film-card-detail-view';
 import CommentsView from '../view/comments-view';
+import FilmCardDetailView from '../view/film-card-detail-view';
+import FilmCardView from '../view/film-card-view';
+import FilmsListContainerView from '../view/films-list-container-view';
+import FilmsListView from '../view/films-list-view';
+import FilmsTemplateView from '../view/films-template-view';
+import FilterView from '../view/filter-view.js';
+import ShowMoreButtonView from '../view/show-more-button-view';
+import SortView from '../view/sort-view';
 import { render } from '../render.js';
 
 

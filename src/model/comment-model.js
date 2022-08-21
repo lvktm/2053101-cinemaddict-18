@@ -1,6 +1,6 @@
 import { generateComment } from '../mock/comment.js';
 
-export default class CommenstModel {
+export default class CommentModel {
   constructor(movieModel) {
     this.movieModel = movieModel;
     this.movies = movieModel.getMovies();
