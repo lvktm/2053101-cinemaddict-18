@@ -1,6 +1,6 @@
 import { getRandomInteger, getRandomElement, randomYearMonthDay } from '../util.js';
 import { titles, posters, descriptions, ageRatings, directors, writers, actors, countries,
-  MAX_MINUTES, MIN_MINUTES, genres, releaseDates, watchingDateMinutesAgo } from './const.js';
+  MAX_MINUTES, MIN_MINUTES, genres, releaseDates, watchingDateMinutesAgo, MAX_COMMENTS_ID } from './const.js';
 import dayjs from 'dayjs';
 import objectSupport from 'dayjs/plugin/objectSupport'; // ES 2015
 import relativeTime from 'dayjs/plugin/relativeTime'; // ES 2015
@@ -8,13 +8,8 @@ import relativeTime from 'dayjs/plugin/relativeTime'; // ES 2015
 dayjs.extend(objectSupport); // использование плагина
 dayjs.extend(relativeTime); // использование плагина
 
-const generateComments = () => {
-  const comments = new Set();
-  for(let i = 0; i < 10; i++) {
-    comments.add(getRandomInteger(1, 10));
-  }
-  return comments;
-};
+const commentsId = Array.from({length: MAX_COMMENTS_ID}, (_value, index) => index);
+const generateCommentsId = () => commentsId.splice(0, getRandomInteger(1, 10));
 
 const generateTitle = () => getRandomElement(titles);
 const generatAlternativeTitle = () => getRandomElement(descriptions);
@@ -22,6 +17,7 @@ const generateRaiting = () => getRandomInteger(1, 10);
 const generatePoster = () => getRandomElement(posters);
 const generateAgeRating = () => getRandomElement(ageRatings);
 const generateDirector = () => getRandomElement(directors);
+
 const generateWritersOrActorsOrGenres = (elements) => {
   const namesCount = getRandomInteger(0, 2);
   const filmNames = [];
@@ -44,7 +40,7 @@ const generateWatchingDate = () => {
 
 export const generateMovie = () => ({
   id: getRandomInteger(1, 1000),
-  comments: generateComments(),
+  comments: generateCommentsId(),
   filmInfo: {
     title: generateTitle(),
     alternativeTitle: generatAlternativeTitle(),
@@ -69,5 +65,3 @@ export const generateMovie = () => ({
     favorite: isTrueOrFalse()
   }
 });
-
-

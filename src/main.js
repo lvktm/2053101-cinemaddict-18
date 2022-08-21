@@ -11,7 +11,6 @@ const siteFooterElement = document.querySelector('.footer__statistics');
 const cinemaddictPresenter = new CinemaddictPresenter();
 const movieModel = new MovieModel();
 const commentsModel = new CommenstModel(movieModel);
-commentsModel.getComments();
 
 render(new UserRankView(), siteHeaderElement);
 render(new FooterStatisticView(), siteFooterElement);

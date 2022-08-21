@@ -6,6 +6,7 @@ import FilterView from '../view/filter-view.js';
 import SortView from '../view/sort-view';
 import ShowMoreButtonView from '../view/show-more-button-view';
 import FilmCardDetailView from '../view/film-card-detail-view';
+import CommentsView from '../view/comments-view';
 import { render } from '../render.js';
 
 
@@ -18,7 +19,14 @@ const onFilmCardClick = (cinemaddictContainer, movie, allComments) => (evt) => {
   if(currentElement.closest('.film-card')) {
     const filmCardDetailComponent = new FilmCardDetailView(movie);
     render(filmCardDetailComponent, cinemaddictContainer);
-    
+
+    const commentsList = document.querySelector('.film-details__comments-list');
+
+    for(let i = 0; i < movie.comments.length; i++) {
+      const filmCommentsComponent = new CommentsView(movie.comments[i], allComments);
+      render(filmCommentsComponent, commentsList);
+    }
+
     const closePopupButton = filmCardDetailComponent.getElement().querySelector('.film-details__close-btn');
     closePopupButton.addEventListener('click', onClosePopupButtonClick(filmCardDetailComponent));
   }
@@ -48,7 +56,9 @@ export default class CinemaddictPresenter {
 
     render(new ShowMoreButtonView(), this.cinemaddictContainer);
 
-    this.filmsComponent.getElement().addEventListener('click', onFilmCardClick(this.cinemaddictContainer, this.movies[0], this.comments));
+    this.filmsComponent
+      .getElement()
+      .addEventListener('click', onFilmCardClick(this.cinemaddictContainer, this.movies[0], this.comments));
 
   };
 }

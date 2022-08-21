@@ -1,5 +1,6 @@
 const MIN_MINUTES = 30;
 const MAX_MINUTES = 150;
+const MAX_COMMENTS_ID = 1000;
 
 const titles = [
   'The Great Flamarion',
@@ -112,8 +113,9 @@ const authors = [
 
 const emotions = ['smile', 'sleeping', 'puke', 'angry'];
 
+
 export {titles, posters, descriptions,
   ageRatings, directors, writers, actors,
   countries, releaseDates, watchingDateMinutesAgo, genres, MIN_MINUTES, MAX_MINUTES,
-  comments, authors, emotions};
+  comments, authors, emotions, MAX_COMMENTS_ID};
 

@@ -8,12 +8,13 @@ export default class CommenstModel {
 
   getComments = () => {
     const allComments = [];
+
     this.movies.map((movie) => {
-      movie.comments.forEach((comment) => {
-        allComments.push(generateComment(comment));
+      movie.comments.forEach((commentId) => {
+        allComments.push(generateComment(commentId));
       });
-      console.log(allComments);
     });
+
     return allComments;
   };
 }
