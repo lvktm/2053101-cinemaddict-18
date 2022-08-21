@@ -5,7 +5,8 @@ const MIN_SYMBOLS = 0;
 const MAX_SYMBOLS = 139;
 
 const createFilmCard = (movie) => {
-  const {comments,
+  const {id,
+    comments,
     filmInfo: {
       title,
       poster,
@@ -31,7 +32,7 @@ const createFilmCard = (movie) => {
   const shortDescription = getShortDescription();
 
   return (
-    `<article class="film-card">
+    `<article class="film-card" data-id="${ id }">
   <a class="film-card__link">
     <h3 class="film-card__title">${ title }</h3>
     <p class="film-card__rating">${ totalRating }</p>

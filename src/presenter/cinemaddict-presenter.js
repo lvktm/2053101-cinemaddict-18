@@ -14,21 +14,26 @@ const onClosePopupButtonClick = (filmCardDetailComponent) => () => {
   filmCardDetailComponent.getElement().remove();
 };
 
-const onFilmCardClick = (cinemaddictContainer, movie, allComments) => (evt) => {
+const onFilmCardClick = (cinemaddictContainer, movies, allComments) => (evt) => {
   const currentElement = evt.target;
   if(currentElement.classList.contains('film-card__poster')) {
-    const filmCardDetailComponent = new FilmCardDetailView(movie);
-    render(filmCardDetailComponent, cinemaddictContainer);
+    for(let i = 0; i < movies.length; i++) {
 
-    const commentsList = document.querySelector('.film-details__comments-list');
+      if(movies[i].id.toString() === currentElement.closest('.film-card').dataset.id) {
+        const filmCardDetailComponent = new FilmCardDetailView(movies[i]);
+        render(filmCardDetailComponent, cinemaddictContainer);
 
-    for(let i = 0; i < movie.comments.length; i++) {
-      const filmCommentsComponent = new CommentsView(movie.comments[i], allComments);
-      render(filmCommentsComponent, commentsList);
+        const commentsList = document.querySelector('.film-details__comments-list');
+
+        for(let j = 0; j < movies[i].comments.length; j++) {
+          const filmCommentsComponent = new CommentsView(movies[i].comments[j], allComments);
+          render(filmCommentsComponent, commentsList);
+        }
+
+        const closePopupButton = filmCardDetailComponent.getElement().querySelector('.film-details__close-btn');
+        closePopupButton.addEventListener('click', onClosePopupButtonClick(filmCardDetailComponent));
+      }
     }
-
-    const closePopupButton = filmCardDetailComponent.getElement().querySelector('.film-details__close-btn');
-    closePopupButton.addEventListener('click', onClosePopupButtonClick(filmCardDetailComponent));
   }
 };
 
@@ -58,7 +63,7 @@ export default class CinemaddictPresenter {
 
     this.filmsComponent
       .getElement()
-      .addEventListener('click', onFilmCardClick(this.cinemaddictContainer, this.movies[0], this.comments));
+      .addEventListener('click', onFilmCardClick(this.cinemaddictContainer, this.movies, this.comments));
 
   };
 }
