@@ -1,6 +1,6 @@
-import { getRandomInteger, getRandomElement, randomYearMonthDay } from '../util.js';
+import { getRandomInteger, getRandomElement, randomYearMonthDay, isTrueOrFalse } from '../util.js';
 import { titles, posters, descriptions, ageRatings, directors, writers, actors, countries,
-  MAX_MINUTES, MIN_MINUTES, genres, releaseDates, watchingDateMinutesAgo, MAX_COMMENTS_ID } from './const.js';
+  genres, releaseDates, watchingDateMinutesAgo } from './const.js';
 import dayjs from 'dayjs';
 import objectSupport from 'dayjs/plugin/objectSupport'; // ES 2015
 import relativeTime from 'dayjs/plugin/relativeTime'; // ES 2015
@@ -8,38 +8,55 @@ import relativeTime from 'dayjs/plugin/relativeTime'; // ES 2015
 dayjs.extend(objectSupport); // использование плагина
 dayjs.extend(relativeTime); // использование плагина
 
+const MIN_MINUTES = 30;
+const MAX_MINUTES = 150;
+const MIN_COMMENTS_ID = 1;
+const MAX_COMMENTS_ID = 1000;
+const MIN_ELEMENTS = 0;
+const MAX_ELEMENTS = 10;
+const MIN_WRITERS = 0;
+const MAX_WRITERS = 2;
+
+// Создаем массив id для комментариев
 const commentsId = Array.from({length: MAX_COMMENTS_ID}, (_value, index) => index);
-const generateCommentsId = () => commentsId.splice(0, getRandomInteger(1, 10));
+const generateCommentsId = () => commentsId.splice(MIN_ELEMENTS, getRandomInteger(MIN_ELEMENTS, MAX_ELEMENTS));
 
 const generateTitle = () => getRandomElement(titles);
+
 const generatAlternativeTitle = () => getRandomElement(descriptions);
-const generateRaiting = () => getRandomInteger(1, 10);
+
+const generateRaiting = () => getRandomInteger(MIN_ELEMENTS, MAX_ELEMENTS);
+
 const generatePoster = () => getRandomElement(posters);
+
 const generateAgeRating = () => getRandomElement(ageRatings);
+
 const generateDirector = () => getRandomElement(directors);
 
 const generateWritersOrActorsOrGenres = (elements) => {
-  const namesCount = getRandomInteger(0, 2);
+  const namesCount = getRandomInteger(MIN_WRITERS, MAX_WRITERS);
   const filmNames = [];
-  for(let i = 0; i <= namesCount; i++) {
+  for(let i = MIN_ELEMENTS; i <= namesCount; i++) {
     filmNames.push(getRandomElement(elements));
   }
   return filmNames;
 };
+
 const generateCountries = () => getRandomElement(countries);
 
 const generateReleaseDate = () => randomYearMonthDay(releaseDates.MIN, releaseDates.MAX);
 
 const generateRauntime = () => getRandomInteger(MIN_MINUTES, MAX_MINUTES);
+
 const generateDescription = () => getRandomElement(descriptions);
-const isTrueOrFalse = () => getRandomInteger(0, 1) === 1;
+
 const generateWatchingDate = () => {
-  const randomMinutes = getRandomInteger(-watchingDateMinutesAgo, 0);
+  const randomMinutes = getRandomInteger(-watchingDateMinutesAgo, MIN_ELEMENTS);
   return dayjs().add(randomMinutes, 'minutes').toDate();
 };
 
 export const generateMovie = () => ({
-  id: getRandomInteger(1, 1000),
+  id: getRandomInteger(MIN_COMMENTS_ID, MAX_COMMENTS_ID),
   comments: generateCommentsId(),
   filmInfo: {
     title: generateTitle(),

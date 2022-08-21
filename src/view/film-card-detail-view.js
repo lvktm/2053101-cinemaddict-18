@@ -2,26 +2,45 @@ import {createElement} from '../render.js';
 import { humanizeReleaseDateDetail, formatMinutesToTime } from '../util.js';
 
 const createFilmCardDetail = (movie) => {
-  const {filmInfo: {
-    title,
-    alternativeTitle,
-    totalRating,
-    poster,
-    ageRating,
-    director,
-    writers,
-    actors,
-    release: {
-      date,
-      releaseCountry
-    },
-    runtime,
-    genre,
-    description}
+  const {comments,
+    filmInfo: {
+      title,
+      alternativeTitle,
+      totalRating,
+      poster,
+      ageRating,
+      director,
+      writers,
+      actors,
+      release: {
+        date,
+        releaseCountry
+      },
+      runtime,
+      genre,
+      description}
   } = movie;
 
   const releaseDateDetail = humanizeReleaseDateDetail(date);
   const filmRuntime = formatMinutesToTime(runtime);
+
+  const getGenreOrGenres = () => genre.length > 1
+    ? 'Genres'
+    : 'Genre';
+
+  const genreOrGenres = getGenreOrGenres();
+
+  const createGenres = () => {
+    let genreElement = '';
+
+    for(let i = 0; i < genre.length; i++) {
+      genreElement += `<span class="film-details__genre">${ genre[i] }</span>`;
+    }
+
+    return genreElement;
+  };
+
+  const genreElements = createGenres();
 
   return (`<section class="film-details">
     <div class="film-details__inner">
@@ -74,11 +93,10 @@ const createFilmCardDetail = (movie) => {
                 <td class="film-details__cell">${ releaseCountry }</td>
               </tr>
               <tr class="film-details__row">
-                <td class="film-details__term">Genres</td>
+                <td class="film-details__term">${ genreOrGenres }</td>
                 <td class="film-details__cell">
-                <span class="film-details__genre">${ genre[0] }</span>
-                <span class="film-details__genre">${ genre[1] }</span>
-                <span class="film-details__genre">${ genre[0] }</span></td>
+                ${ genreElements }
+                </td>
                 </td>
               </tr>
             </table>
@@ -98,7 +116,7 @@ const createFilmCardDetail = (movie) => {
   
       <div class="film-details__bottom-container">
         <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${ comments.length }</span></h3>
   
           <ul class="film-details__comments-list"></ul>
 
@@ -134,7 +152,8 @@ const createFilmCardDetail = (movie) => {
         </section>
       </div>
     </div>
-  </section>`);};
+  </section>`);
+};
 
 export default class FilmCardDetailView {
   constructor(movie) {

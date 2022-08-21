@@ -12,6 +12,8 @@ const MONTH_BEGIN = 1;
 const MONTH_END = 12;
 const YEAR_BEGIN = 1;
 const YEAR_END = 2;
+const MIN = 0;
+const MAX = 1;
 
 // Функция из интернета по генерации случайного числа из диапазона
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
@@ -45,6 +47,8 @@ const formatMinutesToTime = (minutes) => dayjs.duration(minutes, 'minutes').form
 
 const isEsc = (evt) => evt.key === 'Escape';
 
+const isTrueOrFalse = () => getRandomInteger(MIN, MAX) === MAX;
+
 export {getRandomInteger,
   humanizeReleaseDate,
   humanizeReleaseDateDetail,
@@ -53,5 +57,6 @@ export {getRandomInteger,
   randomYearMonthDayHourMinute,
   formatYearMonthDayHourMinute,
   getRandomElement,
-  isEsc
+  isEsc,
+  isTrueOrFalse
 };

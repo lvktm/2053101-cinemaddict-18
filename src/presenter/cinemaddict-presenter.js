@@ -16,7 +16,7 @@ const onClosePopupButtonClick = (filmCardDetailComponent) => () => {
 
 const onFilmCardClick = (cinemaddictContainer, movie, allComments) => (evt) => {
   const currentElement = evt.target;
-  if(currentElement.closest('.film-card')) {
+  if(currentElement.classList.contains('film-card__poster')) {
     const filmCardDetailComponent = new FilmCardDetailView(movie);
     render(filmCardDetailComponent, cinemaddictContainer);
 

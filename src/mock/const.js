@@ -1,7 +1,3 @@
-const MIN_MINUTES = 30;
-const MAX_MINUTES = 150;
-const MAX_COMMENTS_ID = 1000;
-
 const titles = [
   'The Great Flamarion',
   'Santa Claus Conquers the Martians',
@@ -21,12 +17,12 @@ const posters = [
 ];
 
 const descriptions = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  'Cras aliquet varius magna, non porta ligula feugiat eget.',
-  'Fusce tristique felis at fermentum pharetra.',
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Cras aliquet varius magna, non porta ligula feugiat eget.',
+  'Cras aliquet varius magna, non porta ligula feugiat eget. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
+  'Fusce tristique felis at fermentum pharetra.Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
   'Aliquam id orci ut lectus varius viverra.',
   'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
-  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
+  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
   'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
   'Sed sed nisi sed augue convallis suscipit in sed felis.',
   'Aliquam erat volutpat.',
@@ -116,6 +112,6 @@ const emotions = ['smile', 'sleeping', 'puke', 'angry'];
 
 export {titles, posters, descriptions,
   ageRatings, directors, writers, actors,
-  countries, releaseDates, watchingDateMinutesAgo, genres, MIN_MINUTES, MAX_MINUTES,
-  comments, authors, emotions, MAX_COMMENTS_ID};
+  countries, releaseDates, watchingDateMinutesAgo, genres,
+  comments, authors, emotions};
 

@@ -1,6 +1,9 @@
 import {createElement} from '../render.js';
 import { humanizeReleaseDate, formatMinutesToTime } from '../util.js';
 
+const MIN_SYMBOLS = 0;
+const MAX_SYMBOLS = 139;
+
 const createFilmCard = (movie) => {
   const {comments,
     filmInfo: {
@@ -19,6 +22,14 @@ const createFilmCard = (movie) => {
   const filmRuntime = formatMinutesToTime(runtime);
   const commentsCount = Array.from(comments).length;
 
+  const getShortDescription = () => {
+    if(description.length > MAX_SYMBOLS) {
+      return `${description.slice(MIN_SYMBOLS, MAX_SYMBOLS) }...`;
+    }
+    return description;
+  };
+  const shortDescription = getShortDescription();
+
   return (
     `<article class="film-card">
   <a class="film-card__link">
@@ -30,7 +41,7 @@ const createFilmCard = (movie) => {
       <span class="film-card__genre">${ genre }</span>
     </p>
     <img src= ${ poster } alt="" class="film-card__poster">
-    <p class="film-card__description">${description}</p>
+    <p class="film-card__description">${ shortDescription }</p>
     <span class="film-card__comments">${ commentsCount } comments</span>
   </a>
   <div class="film-card__controls">
