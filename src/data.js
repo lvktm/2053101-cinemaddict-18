@@ -1,3 +1,0 @@
-const FILM_CARD_VIEW_AMOUNT = 5;
-
-export {FILM_CARD_VIEW_AMOUNT};
