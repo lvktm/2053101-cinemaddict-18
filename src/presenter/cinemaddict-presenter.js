@@ -10,26 +10,35 @@ import ShowMoreButtonView from '../view/show-more-button-view.js';
 import SortView from '../view/sort-view.js';
 import { render } from '../render.js';
 
-// Обработчик на ESC
-const onFilmCardDetailEscKeydown = (filmCardDetailComponent) => (evt) => {
-  if(isEsc(evt)) {
-    evt.preventDefault();
+
+const addListeners = (filmCardDetailComponent) => {
+  // Обработчик на ESC для закрытия попапа
+  const onFilmCardDetailEscKeydown = (evt) => {
+    if(isEsc(evt)) {
+      evt.preventDefault();
+      closeFilmCardDetail(filmCardDetailComponent);
+    }
+  };
+
+  // Обработчик на click по кнопке закрытия попапа
+  const onFilmCardDetailCloseButtonClick = () => {
     closeFilmCardDetail(filmCardDetailComponent);
+  };
+
+  // Добавляет слушателя на кропку закрытия
+  const closePopupButton = filmCardDetailComponent.element.querySelector('.film-details__close-btn');
+  closePopupButton.addEventListener('click', onFilmCardDetailCloseButtonClick);
+  document.addEventListener('keydown', onFilmCardDetailEscKeydown);
+
+  // Функция закрытия попапа
+  function closeFilmCardDetail() {
+    document.removeEventListener('keydown', onFilmCardDetailEscKeydown);
+    filmCardDetailComponent.element.remove();
+    document.body.classList.remove('hide-overflow');
   }
 };
 
-// Обработчик на click по крестику попапа
-const onFilmCardDetailCloseButtonClick = (filmCardDetailComponent) => () => {
-  closeFilmCardDetail(filmCardDetailComponent);
-};
-
-// Функция закрытия попапа
-function closeFilmCardDetail (filmCardDetailComponent) {
-  document.removeEventListener('keydown', onFilmCardDetailEscKeydown);
-  filmCardDetailComponent.element.remove();
-  document.body.classList.remove('hide-overflow');
-}
-
+// Обработчик отрисовывает попап с комментариями
 const onFilmCardClick = (cinemaddictContainer, movies, allComments) => (evt) => {
   const currentElement = evt.target;
   if(currentElement.classList.contains('film-card__poster')) {
@@ -46,10 +55,11 @@ const onFilmCardClick = (cinemaddictContainer, movies, allComments) => (evt) => 
           render(filmCommentsComponent, commentsList);
         }
 
-        const closePopupButton = filmCardDetailComponent.element.querySelector('.film-details__close-btn');
         document.body.classList.add('hide-overflow');
-        closePopupButton.addEventListener('click', onFilmCardDetailCloseButtonClick(filmCardDetailComponent));
-        document.addEventListener('keydown', onFilmCardDetailEscKeydown(filmCardDetailComponent));
+
+        // Добавляет слушателей и к ним обработчики для работы с попапом
+        addListeners(filmCardDetailComponent);
+
       }
     }
   }
@@ -79,6 +89,7 @@ export default class CinemaddictPresenter {
 
     render(new ShowMoreButtonView(), this.cinemaddictContainer);
 
+    // Добавляет слушателя на контейнер с фильмами
     this.filmsComponent
       .element
       .addEventListener('click', onFilmCardClick(this.cinemaddictContainer, this.movies, this.comments));
