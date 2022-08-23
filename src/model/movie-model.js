@@ -1,5 +1,5 @@
 import { generateMovie } from '../mock/movie.js';
-const MAX_MOVIES = 20;
+const MAX_MOVIES = 7;
 
 export default class MovieModel {
   movies = Array.from({length: MAX_MOVIES}, generateMovie);

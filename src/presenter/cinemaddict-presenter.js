@@ -1,4 +1,5 @@
 import CommentsView from '../view/comments-view.js';
+import EmptyMessageView from '../view/empty-message-view.js';
 import FilmCardDetailView from '../view/film-card-detail-view.js';
 import FilmCardView from '../view/film-card-view.js';
 import FilmsListContainerView from '../view/films-list-container-view.js';
@@ -69,7 +70,8 @@ const onFilmCardClick = (cinemaddictContainer, movies, allComments) => (evt) => 
 function RenderMovies() {
   let renderedMovies = 0;
 
-  this.addMovies = (container, movies) => {
+  this.addMovies = (container, movies, button) => {
+
     movies
       .slice(renderedMovies, renderedMovies + FILM_COUNT_PER_STEP)
       .forEach((movie) => {
@@ -77,14 +79,19 @@ function RenderMovies() {
       });
 
     renderedMovies += FILM_COUNT_PER_STEP;
+
+    if(renderedMovies >= movies.length) {
+      button.element.style.display = 'none';
+      render (new EmptyMessageView(), container.parentNode);
+    }
   };
 
 }
 
 const renderMovies = new RenderMovies();
 
-const onShowMoreButtonClick = (container, movies) => () => {
-  renderMovies.addMovies(container, movies);
+const onShowMoreButtonClick = (container, movies, button) => () => {
+  renderMovies.addMovies(container, movies, button);
 };
 
 export default class CinemaddictPresenter {
@@ -118,8 +125,7 @@ export default class CinemaddictPresenter {
     // Добавляет слушателя на кнопку show more
     this.#showMoreButton
       .element
-      .addEventListener('click', onShowMoreButtonClick(this.#filmsListContainerComponent.element, this.movies));
+      .addEventListener('click', onShowMoreButtonClick(this.#filmsListContainerComponent.element, this.movies, this.#showMoreButton));
 
   };
-
 }
