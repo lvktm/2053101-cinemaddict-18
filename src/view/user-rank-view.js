@@ -7,19 +7,21 @@ const createNewUserRankTemplate = () => (
    </section>`);
 
 export default class UserRankView {
-  getTemplate() {
+  #userRankElement;
+
+  get template() {
     return createNewUserRankTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#userRankElement) {
+      this.#userRankElement = createElement(this.template);
     }
 
-    return this.element;
+    return this.#userRankElement;
   }
 
   removeElement() {
-    this.element = null;
+    this.#userRankElement = null;
   }
 }
