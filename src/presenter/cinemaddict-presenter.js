@@ -5,14 +5,30 @@ import FilmsListContainerView from '../view/films-list-container-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import FilmsTemplateView from '../view/films-template-view.js';
 import FilterView from '../view/filter-view.js';
+import { isEsc } from '../util.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import SortView from '../view/sort-view.js';
 import { render } from '../render.js';
 
-
-const onClosePopupButtonClick = (filmCardDetailComponent) => () => {
-  filmCardDetailComponent.element.remove();
+// Обработчик на ESC
+const onFilmCardDetailEscKeydown = (filmCardDetailComponent) => (evt) => {
+  if(isEsc(evt)) {
+    evt.preventDefault();
+    closeFilmCardDetail(filmCardDetailComponent);
+  }
 };
+
+// Обработчик на click по крестику попапа
+const onFilmCardDetailCloseButtonClick = (filmCardDetailComponent) => () => {
+  closeFilmCardDetail(filmCardDetailComponent);
+};
+
+// Функция закрытия попапа
+function closeFilmCardDetail (filmCardDetailComponent) {
+  document.removeEventListener('keydown', onFilmCardDetailEscKeydown);
+  filmCardDetailComponent.element.remove();
+  document.body.classList.remove('hide-overflow');
+}
 
 const onFilmCardClick = (cinemaddictContainer, movies, allComments) => (evt) => {
   const currentElement = evt.target;
@@ -31,7 +47,9 @@ const onFilmCardClick = (cinemaddictContainer, movies, allComments) => (evt) => 
         }
 
         const closePopupButton = filmCardDetailComponent.element.querySelector('.film-details__close-btn');
-        closePopupButton.addEventListener('click', onClosePopupButtonClick(filmCardDetailComponent));
+        document.body.classList.add('hide-overflow');
+        closePopupButton.addEventListener('click', onFilmCardDetailCloseButtonClick(filmCardDetailComponent));
+        document.addEventListener('keydown', onFilmCardDetailEscKeydown(filmCardDetailComponent));
       }
     }
   }
