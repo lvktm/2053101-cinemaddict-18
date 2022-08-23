@@ -34,24 +34,26 @@ const createComments = (movieComment, allMovieComments) => {
 
 
 export default class CommentsView {
+  #commentsElement;
+
   constructor(movieComment, allComments) {
     this.movieComment = movieComment;
     this.allComments = allComments;
   }
 
-  getTemplate() {
+  get template() {
     return createComments(this.movieComment, this.allComments);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#commentsElement) {
+      this.#commentsElement = createElement(this.template);
     }
 
-    return this.element;
+    return this.#commentsElement;
   }
 
   removeElement() {
-    this.element = null;
+    this.#commentsElement = null;
   }
 }

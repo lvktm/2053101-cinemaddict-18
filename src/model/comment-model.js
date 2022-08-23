@@ -3,10 +3,10 @@ import { generateComment } from '../mock/comment.js';
 export default class CommentModel {
   constructor(movieModel) {
     this.movieModel = movieModel;
-    this.movies = movieModel.getMovies();
+    this.movies = movieModel.allMovies;
   }
 
-  getComments = () => {
+  get comments () {
     const allComments = [];
 
     this.movies.map((movie) => {
@@ -16,5 +16,5 @@ export default class CommentModel {
     });
 
     return allComments;
-  };
+  }
 }

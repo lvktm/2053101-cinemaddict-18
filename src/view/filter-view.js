@@ -9,19 +9,21 @@ const createNewFilterTemplate = () => (
   </nav>`);
 
 export default class FilterView {
-  getTemplate() {
+  #filterElement;
+
+  get template() {
     return createNewFilterTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#filterElement) {
+      this.#filterElement = createElement(this.template);
     }
 
-    return this.element;
+    return this.#filterElement;
   }
 
   removeElement() {
-    this.element = null;
+    this.#filterElement = null;
   }
 }

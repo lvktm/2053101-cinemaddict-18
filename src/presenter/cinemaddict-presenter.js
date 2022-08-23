@@ -1,18 +1,34 @@
-import CommentsView from '../view/comments-view';
-import FilmCardDetailView from '../view/film-card-detail-view';
-import FilmCardView from '../view/film-card-view';
-import FilmsListContainerView from '../view/films-list-container-view';
-import FilmsListView from '../view/films-list-view';
-import FilmsTemplateView from '../view/films-template-view';
+import CommentsView from '../view/comments-view.js';
+import FilmCardDetailView from '../view/film-card-detail-view.js';
+import FilmCardView from '../view/film-card-view.js';
+import FilmsListContainerView from '../view/films-list-container-view.js';
+import FilmsListView from '../view/films-list-view.js';
+import FilmsTemplateView from '../view/films-template-view.js';
 import FilterView from '../view/filter-view.js';
-import ShowMoreButtonView from '../view/show-more-button-view';
-import SortView from '../view/sort-view';
+import { isEsc } from '../util.js';
+import ShowMoreButtonView from '../view/show-more-button-view.js';
+import SortView from '../view/sort-view.js';
 import { render } from '../render.js';
 
-
-const onClosePopupButtonClick = (filmCardDetailComponent) => () => {
-  filmCardDetailComponent.getElement().remove();
+// Обработчик на ESC
+const onFilmCardDetailEscKeydown = (filmCardDetailComponent) => (evt) => {
+  if(isEsc(evt)) {
+    evt.preventDefault();
+    closeFilmCardDetail(filmCardDetailComponent);
+  }
 };
+
+// Обработчик на click по крестику попапа
+const onFilmCardDetailCloseButtonClick = (filmCardDetailComponent) => () => {
+  closeFilmCardDetail(filmCardDetailComponent);
+};
+
+// Функция закрытия попапа
+function closeFilmCardDetail (filmCardDetailComponent) {
+  document.removeEventListener('keydown', onFilmCardDetailEscKeydown);
+  filmCardDetailComponent.element.remove();
+  document.body.classList.remove('hide-overflow');
+}
 
 const onFilmCardClick = (cinemaddictContainer, movies, allComments) => (evt) => {
   const currentElement = evt.target;
@@ -30,8 +46,10 @@ const onFilmCardClick = (cinemaddictContainer, movies, allComments) => (evt) => 
           render(filmCommentsComponent, commentsList);
         }
 
-        const closePopupButton = filmCardDetailComponent.getElement().querySelector('.film-details__close-btn');
-        closePopupButton.addEventListener('click', onClosePopupButtonClick(filmCardDetailComponent));
+        const closePopupButton = filmCardDetailComponent.element.querySelector('.film-details__close-btn');
+        document.body.classList.add('hide-overflow');
+        closePopupButton.addEventListener('click', onFilmCardDetailCloseButtonClick(filmCardDetailComponent));
+        document.addEventListener('keydown', onFilmCardDetailEscKeydown(filmCardDetailComponent));
       }
     }
   }
@@ -45,24 +63,24 @@ export default class CinemaddictPresenter {
   init = (cinemaddictContainer, movieModel, commentsModel) => {
     this.cinemaddictContainer = cinemaddictContainer;
     this.movieModel = movieModel;
-    this.movies = [...this.movieModel.getMovies()];
+    this.movies = [...this.movieModel.allMovies];
     this.commentsModel = commentsModel;
-    this.comments = [...this.commentsModel.getComments()];
+    this.comments = [...this.commentsModel.comments];
 
     render(new FilterView(), this.cinemaddictContainer);
     render(new SortView(), this.cinemaddictContainer);
     render(this.filmsComponent, this.cinemaddictContainer);
-    render(this.filmsListComponent, this.filmsComponent.getElement());
-    render(this.filmsListContainerComponent, this.filmsListComponent.getElement());
+    render(this.filmsListComponent, this.filmsComponent.element);
+    render(this.filmsListContainerComponent, this.filmsListComponent.element);
 
     for(let i = 0; i < this.movies.length; i++) {
-      render(new FilmCardView(this.movies[i]), this.filmsListContainerComponent.getElement());
+      render(new FilmCardView(this.movies[i]), this.filmsListContainerComponent.element);
     }
 
     render(new ShowMoreButtonView(), this.cinemaddictContainer);
 
     this.filmsComponent
-      .getElement()
+      .element
       .addEventListener('click', onFilmCardClick(this.cinemaddictContainer, this.movies, this.comments));
 
   };

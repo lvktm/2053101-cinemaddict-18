@@ -8,19 +8,21 @@ const createSort = () => (
     </ul>`);
 
 export default class SortView {
-  getTemplate() {
+  #sortElement;
+
+  get template() {
     return createSort();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#sortElement) {
+      this.#sortElement = createElement(this.template);
     }
 
-    return this.element;
+    return this.#sortElement;
   }
 
   removeElement() {
-    this.element = null;
+    this.#sortElement = null;
   }
 }
