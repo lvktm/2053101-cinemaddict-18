@@ -41,7 +41,6 @@ const addListeners = (filmCardDetailComponent) => {
   }
 };
 
-
 // Обработчик отрисовывает попап с комментариями
 const onFilmCardClick = (cinemaddictContainer, movies, allComments) => (evt) => {
   const currentElement = evt.target;
@@ -67,38 +66,36 @@ const onFilmCardClick = (cinemaddictContainer, movies, allComments) => (evt) => 
   }
 };
 
-function RenderMovies() {
-  let renderedMovies = 0;
+// function RenderMovies() {
+//   let renderedMovies = 0;
 
-  this.addMovies = (container, movies, button) => {
+//   this.addMovies = (container, movies, button) => {
 
-    movies
-      .slice(renderedMovies, renderedMovies + FILM_COUNT_PER_STEP)
-      .forEach((movie) => {
-        render(new FilmCardView(movie), container);
-      });
+//     movies
+//       .slice(renderedMovies, renderedMovies + FILM_COUNT_PER_STEP)
+//       .forEach((movie) => {
+//         render(new FilmCardView(movie), container);
+//       });
 
-    renderedMovies += FILM_COUNT_PER_STEP;
+//     renderedMovies += FILM_COUNT_PER_STEP;
 
-    if(renderedMovies >= movies.length) {
-      button.element.style.display = 'none';
-      render (new EmptyMessageView(), container.parentNode);
-    }
-  };
+//     if(renderedMovies >= movies.length) {
+//       button.element.style.display = 'none';
+//       render (new EmptyMessageView(), container.parentNode);
+//     }
+//   };
 
-}
+// }
 
-const renderMovies = new RenderMovies();
+// const renderMovies = new RenderMovies();
 
-const onShowMoreButtonClick = (container, movies, button) => () => {
-  renderMovies.addMovies(container, movies, button);
-};
 
 export default class CinemaddictPresenter {
   #filmsComponent = new FilmsTemplateView();
   #filmsListComponent = new FilmsListView();
   #filmsListContainerComponent = new FilmsListContainerView();
   #showMoreButton = new ShowMoreButtonView();
+  renderedMovies = FILM_COUNT_PER_STEP;
 
   constructor(cinemaddictContainer, movieModel, commentsModel) {
     this.cinemaddictContainer = cinemaddictContainer;
@@ -108,6 +105,28 @@ export default class CinemaddictPresenter {
     this.comments = [...this.commentsModel.comments];
   }
 
+
+  #renderMovies() {
+    console.log(this.renderedMovies);
+    this.movies
+      .slice(this.renderedMovies, this.renderedMovies + FILM_COUNT_PER_STEP)
+      .forEach((movie) => {
+        render(new FilmCardView(movie), this.#filmsListContainerComponent.element);
+      });
+
+    this.renderedMovies += FILM_COUNT_PER_STEP;
+
+    if(this.renderedMovies >= this.movies.length) {
+      this.#showMoreButton.element.style.display = 'none';
+      render (new EmptyMessageView(), this.#filmsListContainerComponent.element.parentNode);
+    }
+
+  }
+
+  #onShowMoreButtonClick = () => {
+    this.#renderMovies();
+  };
+
   init = () => {
     render(new FilterView(), this.cinemaddictContainer);
     render(new SortView(), this.cinemaddictContainer);
@@ -115,7 +134,7 @@ export default class CinemaddictPresenter {
     render(this.#filmsListComponent, this.#filmsComponent.element);
     render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
 
-    renderMovies.addMovies(this.#filmsListContainerComponent.element, this.movies);
+    this.#renderMovies(this.#filmsListContainerComponent.element, this.movies);
 
     render(this.#showMoreButton, this.cinemaddictContainer);
 
@@ -125,9 +144,13 @@ export default class CinemaddictPresenter {
       .addEventListener('click', onFilmCardClick(this.cinemaddictContainer, this.movies, this.comments));
 
     // Добавляет слушателя на кнопку show more
-    this.#showMoreButton
-      .element
-      .addEventListener('click', onShowMoreButtonClick(this.#filmsListContainerComponent.element, this.movies, this.#showMoreButton));
+    // this.#showMoreButton
+    //   .element
+    //   .addEventListener('click', onShowMoreButtonClick(this.#filmsListContainerComponent.element, this.movies, this.#showMoreButton));
+
+    this.handler = () => console.log('handler');
+
+    this.#showMoreButton.setClickHandler(this.#onShowMoreButtonClick);
 
   };
 }
