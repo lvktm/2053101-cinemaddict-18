@@ -100,13 +100,15 @@ export default class CinemaddictPresenter {
   #filmsListContainerComponent = new FilmsListContainerView();
   #showMoreButton = new ShowMoreButtonView();
 
-  init = (cinemaddictContainer, movieModel, commentsModel) => {
+  constructor(cinemaddictContainer, movieModel, commentsModel) {
     this.cinemaddictContainer = cinemaddictContainer;
     this.movieModel = movieModel;
     this.movies = [...this.movieModel.allMovies];
     this.commentsModel = commentsModel;
     this.comments = [...this.commentsModel.comments];
+  }
 
+  init = () => {
     render(new FilterView(), this.cinemaddictContainer);
     render(new SortView(), this.cinemaddictContainer);
     render(this.#filmsComponent, this.cinemaddictContainer);
