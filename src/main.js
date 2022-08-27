@@ -1,5 +1,5 @@
 import UserRankView from './view/user-rank-view.js';
-import {render} from './render.js';
+import { render } from './framework/render.js';
 import CinemaddictPresenter from './presenter/cinemaddict-presenter.js';
 import FooterStatisticView from './view/footer-statistic-view.js';
 import MovieModel from './model/movie-model.js';

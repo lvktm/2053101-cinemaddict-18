@@ -9,7 +9,7 @@ import FilterView from '../view/filter-view.js';
 import { isEsc } from '../util.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import SortView from '../view/sort-view.js';
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 
 const FILM_COUNT_PER_STEP = 5;
 
