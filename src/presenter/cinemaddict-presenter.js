@@ -66,36 +66,12 @@ const onFilmCardClick = (cinemaddictContainer, movies, allComments) => (evt) => 
   }
 };
 
-// function RenderMovies() {
-//   let renderedMovies = 0;
-
-//   this.addMovies = (container, movies, button) => {
-
-//     movies
-//       .slice(renderedMovies, renderedMovies + FILM_COUNT_PER_STEP)
-//       .forEach((movie) => {
-//         render(new FilmCardView(movie), container);
-//       });
-
-//     renderedMovies += FILM_COUNT_PER_STEP;
-
-//     if(renderedMovies >= movies.length) {
-//       button.element.style.display = 'none';
-//       render (new EmptyMessageView(), container.parentNode);
-//     }
-//   };
-
-// }
-
-// const renderMovies = new RenderMovies();
-
-
 export default class CinemaddictPresenter {
   #filmsComponent = new FilmsTemplateView();
   #filmsListComponent = new FilmsListView();
   #filmsListContainerComponent = new FilmsListContainerView();
   #showMoreButton = new ShowMoreButtonView();
-  renderedMovies = FILM_COUNT_PER_STEP;
+  #renderedMovies = FILM_COUNT_PER_STEP;
 
   constructor(cinemaddictContainer, movieModel, commentsModel) {
     this.cinemaddictContainer = cinemaddictContainer;
@@ -106,25 +82,19 @@ export default class CinemaddictPresenter {
   }
 
 
-  #renderMovies() {
-    console.log(this.renderedMovies);
+  #renderMovies = () => {
     this.movies
-      .slice(this.renderedMovies, this.renderedMovies + FILM_COUNT_PER_STEP)
+      .slice(this.#renderedMovies, this.#renderedMovies + FILM_COUNT_PER_STEP)
       .forEach((movie) => {
         render(new FilmCardView(movie), this.#filmsListContainerComponent.element);
       });
 
-    this.renderedMovies += FILM_COUNT_PER_STEP;
+    this.#renderedMovies += FILM_COUNT_PER_STEP;
 
-    if(this.renderedMovies >= this.movies.length) {
+    if(this.#renderedMovies >= this.movies.length) {
       this.#showMoreButton.element.style.display = 'none';
       render (new EmptyMessageView(), this.#filmsListContainerComponent.element.parentNode);
     }
-
-  }
-
-  #onShowMoreButtonClick = () => {
-    this.#renderMovies();
   };
 
   init = () => {
@@ -134,7 +104,10 @@ export default class CinemaddictPresenter {
     render(this.#filmsListComponent, this.#filmsComponent.element);
     render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
 
-    this.#renderMovies(this.#filmsListContainerComponent.element, this.movies);
+    // Отрисовывает 5 фильмов при загрузке страницы
+    for(let i = 0; i < FILM_COUNT_PER_STEP; i++) {
+      render(new FilmCardView(this.movies[i]), this.#filmsListContainerComponent.element);
+    }
 
     render(this.#showMoreButton, this.cinemaddictContainer);
 
@@ -144,13 +117,6 @@ export default class CinemaddictPresenter {
       .addEventListener('click', onFilmCardClick(this.cinemaddictContainer, this.movies, this.comments));
 
     // Добавляет слушателя на кнопку show more
-    // this.#showMoreButton
-    //   .element
-    //   .addEventListener('click', onShowMoreButtonClick(this.#filmsListContainerComponent.element, this.movies, this.#showMoreButton));
-
-    this.handler = () => console.log('handler');
-
-    this.#showMoreButton.setClickHandler(this.#onShowMoreButtonClick);
-
+    this.#showMoreButton.setClickHandler(this.#renderMovies);
   };
 }
