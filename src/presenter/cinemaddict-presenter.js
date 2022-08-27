@@ -41,31 +41,6 @@ const addListeners = (filmCardDetailComponent) => {
   }
 };
 
-// Обработчик отрисовывает попап с комментариями
-const onFilmCardClick = (cinemaddictContainer, movies, allComments) => (evt) => {
-  const currentElement = evt.target;
-  if(currentElement.classList.contains('film-card__poster')) {
-    for(let i = 0; i < movies.length; i++) {
-
-      if(movies[i].id.toString() === currentElement.closest('.film-card').dataset.id) {
-        const filmCardDetailComponent = new FilmCardDetailView(movies[i]);
-        render(filmCardDetailComponent, cinemaddictContainer);
-
-        const commentsList = document.querySelector('.film-details__comments-list');
-
-        for(let j = 0; j < movies[i].comments.length; j++) {
-          const filmCommentsComponent = new CommentsView(movies[i].comments[j], allComments);
-          render(filmCommentsComponent, commentsList);
-        }
-
-        document.body.classList.add('hide-overflow');
-
-        addListeners(filmCardDetailComponent);
-      }
-    }
-  }
-};
-
 export default class CinemaddictPresenter {
   #filmsComponent = new FilmsTemplateView();
   #filmsListComponent = new FilmsListView();
@@ -81,8 +56,32 @@ export default class CinemaddictPresenter {
     this.comments = [...this.commentsModel.comments];
   }
 
+  // Обработчик отрисовывает попап с комментариями
+  #onFilmCardClick = (evt) => {
+    const currentElement = evt.target;
+    if(currentElement.classList.contains('film-card__poster')) {
+      for(let i = 0; i < this.movies.length; i++) {
 
-  #renderMovies = () => {
+        if(this.movies[i].id.toString() === currentElement.closest('.film-card').dataset.id) {
+          const filmCardDetailComponent = new FilmCardDetailView(this.movies[i]);
+          render(filmCardDetailComponent, this.cinemaddictContainer);
+
+          const commentsList = document.querySelector('.film-details__comments-list');
+
+          for(let j = 0; j < this.movies[i].comments.length; j++) {
+            const filmCommentsComponent = new CommentsView(this.movies[i].comments[j], this.comments);
+            render(filmCommentsComponent, commentsList);
+          }
+
+          document.body.classList.add('hide-overflow');
+
+          addListeners(filmCardDetailComponent);
+        }
+      }
+    }
+  };
+
+  #onShowMoreButtonClick = () => {
     this.movies
       .slice(this.#renderedMovies, this.#renderedMovies + FILM_COUNT_PER_STEP)
       .forEach((movie) => {
@@ -111,12 +110,10 @@ export default class CinemaddictPresenter {
 
     render(this.#showMoreButton, this.cinemaddictContainer);
 
-    // Добавляет слушателя на контейнер с фильмами
-    this.#filmsComponent
-      .element
-      .addEventListener('click', onFilmCardClick(this.cinemaddictContainer, this.movies, this.comments));
+    // Добавляет обработчик на клик на контейнер с фильмами
+    this.#filmsComponent.setClickHandler(this.#onFilmCardClick);
 
-    // Добавляет слушателя на кнопку show more
-    this.#showMoreButton.setClickHandler(this.#renderMovies);
+    // Добавляет обработчик на клик на кнопку show more
+    this.#showMoreButton.setClickHandler(this.#onShowMoreButtonClick);
   };
 }

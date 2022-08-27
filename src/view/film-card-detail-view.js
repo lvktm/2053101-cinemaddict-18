@@ -165,5 +165,4 @@ export default class FilmCardDetailView extends AbstractView {
   get template() {
     return createFilmCardDetail(this.movie);
   }
-
 }
