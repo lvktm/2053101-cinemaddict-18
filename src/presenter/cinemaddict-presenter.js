@@ -57,10 +57,15 @@ export default class CinemaddictPresenter {
   constructor(cinemaddictContainer, movieModel, commentsModel) {
     this.#cinemaddictContainer = cinemaddictContainer;
     this.#movieModel = movieModel;
-    this.#movies = [...this.#movieModel.allMovies];
     this.#commentsModel = commentsModel;
-    this.#comments = [...this.#commentsModel.comments];
   }
+
+  init = () => {
+    this.#movies = [...this.#movieModel.allMovies];
+    this.#comments = [...this.#commentsModel.comments];
+
+    this.#renderFilmBoard();
+  };
 
   // Обработчик отрисовывает попап с комментариями
   #onFilmCardClick = (evt) => {
@@ -87,12 +92,43 @@ export default class CinemaddictPresenter {
     }
   };
 
+  #renderFilter = () => render(new FilterView(), this.#cinemaddictContainer);
+
+  #renderSort = () => render(new SortView(), this.#cinemaddictContainer);
+
+  #renderFilmsListContainer = () => {
+    render(this.#filmsComponent, this.#cinemaddictContainer);
+    render(this.#filmsListComponent, this.#filmsComponent.element);
+    render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
+  };
+
+  #renderFilmCard = (movie) => {
+    const filmCardComponent = new FilmCardView(movie);
+    const filmListContainerComponent = this.#filmsListContainerComponent.element;
+
+    // Добавить к нему обработчик на клик на открытие попапа
+    filmCardComponent.setClickHandler(this.#onFilmCardClick);
+
+    // Отрисовать карточку фильма
+    render(filmCardComponent, filmListContainerComponent);
+  };
+
+  #renderFilmCards = (from, to) => {
+    this.#movies
+      .slice(from, to)
+      .forEach((movie) => this.#renderFilmCard(movie));
+  };
+
+  #renderShowMoreButton = () => {
+    render(this.#showMoreButton, this.#cinemaddictContainer);
+    // Добавляет обработчик на клик на кнопку show more
+    this.#showMoreButton.setClickHandler(this.#onShowMoreButtonClick);
+  };
+
   #onShowMoreButtonClick = () => {
     this.#movies
       .slice(this.#renderedMovies, this.#renderedMovies + FILM_COUNT_PER_STEP)
-      .forEach((movie) => {
-        render(new FilmCardView(movie), this.#filmsListContainerComponent.element);
-      });
+      .forEach((movie) => this.#renderFilmCard(movie));
 
     this.#renderedMovies += FILM_COUNT_PER_STEP;
 
@@ -102,24 +138,16 @@ export default class CinemaddictPresenter {
     }
   };
 
-  init = () => {
-    render(new FilterView(), this.#cinemaddictContainer);
-    render(new SortView(), this.#cinemaddictContainer);
-    render(this.#filmsComponent, this.#cinemaddictContainer);
-    render(this.#filmsListComponent, this.#filmsComponent.element);
-    render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
+  #renderFilmBoard = () => {
+    this.#renderFilter();
 
-    // Отрисовывает 5 фильмов при загрузке страницы
-    for(let i = 0; i < FILM_COUNT_PER_STEP; i++) {
-      render(new FilmCardView(this.#movies[i]), this.#filmsListContainerComponent.element);
-    }
+    this.#renderSort();
 
-    // Добавляет обработчик на клик на контейнер с фильмами
-    this.#filmsComponent.setClickHandler(this.#onFilmCardClick);
+    this.#renderFilmsListContainer();
 
-    render(this.#showMoreButton, this.#cinemaddictContainer);
-    // Добавляет обработчик на клик на кнопку show more
-    this.#showMoreButton.setClickHandler(this.#onShowMoreButtonClick);
+    this.#renderFilmCards(0, FILM_COUNT_PER_STEP);
 
+    this.#renderShowMoreButton();
   };
+
 }
