@@ -1,23 +1,20 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createFilmsTemplate = () => '<section class="films"></section>';
 
-export default class FilmsTemplateView {
-  #filmsTemplateElement;
+export default class FilmsTemplateView extends AbstractView {
 
   get template() {
     return createFilmsTemplate();
   }
 
-  get element() {
-    if (!this.#filmsTemplateElement) {
-      this.#filmsTemplateElement = createElement(this.template);
-    }
+  setClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.addEventListener('click', this.#clickHandler);
+  };
 
-    return this.#filmsTemplateElement;
-  }
-
-  removeElement() {
-    this.#filmsTemplateElement = null;
-  }
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click(evt);
+  };
 }

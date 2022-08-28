@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createEmptyMessage = () => `<h2 class="films-list__title">There are no movies in our database</h2>
 
@@ -11,22 +11,10 @@ const createEmptyMessage = () => `<h2 class="films-list__title">There are no mov
 -->
 </section>`;
 
-export default class EmptyMessageView {
-  #emptyMessageElement;
+export default class EmptyMessageView extends AbstractView {
 
   get template() {
     return createEmptyMessage();
   }
 
-  get element() {
-    if (!this.#emptyMessageElement) {
-      this.#emptyMessageElement = createElement(this.template);
-    }
-
-    return this.#emptyMessageElement;
-  }
-
-  removeElement() {
-    this.#emptyMessageElement = null;
-  }
 }

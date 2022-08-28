@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { formatYearMonthDayHourMinute } from '../util.js';
 
 const createComments = (movieComment, allMovieComments) => {
@@ -33,27 +33,14 @@ const createComments = (movieComment, allMovieComments) => {
 };
 
 
-export default class CommentsView {
-  #commentsElement;
-
+export default class CommentsView extends AbstractView {
   constructor(movieComment, allComments) {
+    super();
     this.movieComment = movieComment;
     this.allComments = allComments;
   }
 
   get template() {
     return createComments(this.movieComment, this.allComments);
-  }
-
-  get element() {
-    if (!this.#commentsElement) {
-      this.#commentsElement = createElement(this.template);
-    }
-
-    return this.#commentsElement;
-  }
-
-  removeElement() {
-    this.#commentsElement = null;
   }
 }
