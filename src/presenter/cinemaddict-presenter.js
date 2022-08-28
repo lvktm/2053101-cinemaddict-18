@@ -42,6 +42,12 @@ const addListeners = (filmCardDetailComponent) => {
 };
 
 export default class CinemaddictPresenter {
+  #cinemaddictContainer = null;
+  #movieModel = null;
+  #commentsModel = null;
+  #movies = null;
+  #comments = null;
+
   #filmsComponent = new FilmsTemplateView();
   #filmsListComponent = new FilmsListView();
   #filmsListContainerComponent = new FilmsListContainerView();
@@ -49,27 +55,27 @@ export default class CinemaddictPresenter {
   #renderedMovies = FILM_COUNT_PER_STEP;
 
   constructor(cinemaddictContainer, movieModel, commentsModel) {
-    this.cinemaddictContainer = cinemaddictContainer;
-    this.movieModel = movieModel;
-    this.movies = [...this.movieModel.allMovies];
-    this.commentsModel = commentsModel;
-    this.comments = [...this.commentsModel.comments];
+    this.#cinemaddictContainer = cinemaddictContainer;
+    this.#movieModel = movieModel;
+    this.#movies = [...this.#movieModel.allMovies];
+    this.#commentsModel = commentsModel;
+    this.#comments = [...this.#commentsModel.comments];
   }
 
   // Обработчик отрисовывает попап с комментариями
   #onFilmCardClick = (evt) => {
     const currentElement = evt.target;
     if(currentElement.classList.contains('film-card__poster')) {
-      for(let i = 0; i < this.movies.length; i++) {
+      for(let i = 0; i < this.#movies.length; i++) {
 
-        if(this.movies[i].id.toString() === currentElement.closest('.film-card').dataset.id) {
-          const filmCardDetailComponent = new FilmCardDetailView(this.movies[i]);
-          render(filmCardDetailComponent, this.cinemaddictContainer);
+        if(this.#movies[i].id.toString() === currentElement.closest('.film-card').dataset.id) {
+          const filmCardDetailComponent = new FilmCardDetailView(this.#movies[i]);
+          render(filmCardDetailComponent, this.#cinemaddictContainer);
 
           const commentsList = document.querySelector('.film-details__comments-list');
 
-          for(let j = 0; j < this.movies[i].comments.length; j++) {
-            const filmCommentsComponent = new CommentsView(this.movies[i].comments[j], this.comments);
+          for(let j = 0; j < this.#movies[i].comments.length; j++) {
+            const filmCommentsComponent = new CommentsView(this.#movies[i].comments[j], this.#comments);
             render(filmCommentsComponent, commentsList);
           }
 
@@ -82,7 +88,7 @@ export default class CinemaddictPresenter {
   };
 
   #onShowMoreButtonClick = () => {
-    this.movies
+    this.#movies
       .slice(this.#renderedMovies, this.#renderedMovies + FILM_COUNT_PER_STEP)
       .forEach((movie) => {
         render(new FilmCardView(movie), this.#filmsListContainerComponent.element);
@@ -90,30 +96,30 @@ export default class CinemaddictPresenter {
 
     this.#renderedMovies += FILM_COUNT_PER_STEP;
 
-    if(this.#renderedMovies >= this.movies.length) {
+    if(this.#renderedMovies >= this.#movies.length) {
       this.#showMoreButton.element.style.display = 'none';
       render (new EmptyMessageView(), this.#filmsListContainerComponent.element.parentNode);
     }
   };
 
   init = () => {
-    render(new FilterView(), this.cinemaddictContainer);
-    render(new SortView(), this.cinemaddictContainer);
-    render(this.#filmsComponent, this.cinemaddictContainer);
+    render(new FilterView(), this.#cinemaddictContainer);
+    render(new SortView(), this.#cinemaddictContainer);
+    render(this.#filmsComponent, this.#cinemaddictContainer);
     render(this.#filmsListComponent, this.#filmsComponent.element);
     render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
 
     // Отрисовывает 5 фильмов при загрузке страницы
     for(let i = 0; i < FILM_COUNT_PER_STEP; i++) {
-      render(new FilmCardView(this.movies[i]), this.#filmsListContainerComponent.element);
+      render(new FilmCardView(this.#movies[i]), this.#filmsListContainerComponent.element);
     }
-
-    render(this.#showMoreButton, this.cinemaddictContainer);
 
     // Добавляет обработчик на клик на контейнер с фильмами
     this.#filmsComponent.setClickHandler(this.#onFilmCardClick);
 
+    render(this.#showMoreButton, this.#cinemaddictContainer);
     // Добавляет обработчик на клик на кнопку show more
     this.#showMoreButton.setClickHandler(this.#onShowMoreButtonClick);
+
   };
 }
