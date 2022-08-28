@@ -13,34 +13,6 @@ import { render } from '../framework/render.js';
 
 const FILM_COUNT_PER_STEP = 5;
 
-// Добавляет слушателей и к ним обработчики для работы с попапом
-const addListeners = (filmCardDetailComponent) => {
-  // Обработчик на ESC для закрытия попапа
-  const onFilmCardDetailEscKeydown = (evt) => {
-    if(isEsc(evt)) {
-      evt.preventDefault();
-      closeFilmCardDetail(filmCardDetailComponent);
-    }
-  };
-
-  // Обработчик на click по кнопке закрытия попапа
-  const onFilmCardDetailCloseButtonClick = () => {
-    closeFilmCardDetail(filmCardDetailComponent);
-  };
-
-  // Добавляет слушателя на кропку закрытия
-  const closeFilmCardDetailButton = filmCardDetailComponent.element.querySelector('.film-details__close-btn');
-  closeFilmCardDetailButton.addEventListener('click', onFilmCardDetailCloseButtonClick);
-  document.addEventListener('keydown', onFilmCardDetailEscKeydown);
-
-  // Функция закрытия попапа
-  function closeFilmCardDetail() {
-    document.removeEventListener('keydown', onFilmCardDetailEscKeydown);
-    filmCardDetailComponent.element.remove();
-    document.body.classList.remove('hide-overflow');
-  }
-};
-
 export default class CinemaddictPresenter {
   #cinemaddictContainer = null;
   #movieModel = null;
@@ -67,31 +39,6 @@ export default class CinemaddictPresenter {
     this.#renderFilmBoard();
   };
 
-  // Обработчик отрисовывает попап с комментариями
-  #onFilmCardClick = (evt) => {
-    const currentElement = evt.target;
-    if(currentElement.classList.contains('film-card__poster')) {
-      for(let i = 0; i < this.#movies.length; i++) {
-
-        if(this.#movies[i].id.toString() === currentElement.closest('.film-card').dataset.id) {
-          const filmCardDetailComponent = new FilmCardDetailView(this.#movies[i]);
-          render(filmCardDetailComponent, this.#cinemaddictContainer);
-
-          const commentsList = document.querySelector('.film-details__comments-list');
-
-          for(let j = 0; j < this.#movies[i].comments.length; j++) {
-            const filmCommentsComponent = new CommentsView(this.#movies[i].comments[j], this.#comments);
-            render(filmCommentsComponent, commentsList);
-          }
-
-          document.body.classList.add('hide-overflow');
-
-          addListeners(filmCardDetailComponent);
-        }
-      }
-    }
-  };
-
   #renderFilter = () => render(new FilterView(), this.#cinemaddictContainer);
 
   #renderSort = () => render(new SortView(), this.#cinemaddictContainer);
@@ -106,11 +53,59 @@ export default class CinemaddictPresenter {
     const filmCardComponent = new FilmCardView(movie);
     const filmListContainerComponent = this.#filmsListContainerComponent.element;
 
-    // Добавить к нему обработчик на клик на открытие попапа
-    filmCardComponent.setClickHandler(this.#onFilmCardClick);
+    // Обработчик отрисовывает попап с комментариями
+    const filmCardClickHandler = (evt) => {
+      const currentElement = evt.target;
+      if(currentElement.tagName === 'IMG') {
+        this.#movies.forEach((film) => {
 
-    // Отрисовать карточку фильма
+          if(film.id.toString() === currentElement.parentNode.parentNode.dataset.id) {
+            this.#renderFilmCardDetail(film);
+          }
+
+        });
+      }
+    };
+
+    filmCardComponent.setFilmCardClickHandler(filmCardClickHandler);
+
     render(filmCardComponent, filmListContainerComponent);
+  };
+
+  #renderFilmCardDetail = (movie) => {
+    const filmCardDetailComponent = new FilmCardDetailView(movie);
+    render(filmCardDetailComponent, this.#cinemaddictContainer);
+
+    const commentsList = document.querySelector('.film-details__comments-list');
+
+    movie.comments.forEach((comment) => {
+      const filmCommentsComponent = new CommentsView(comment, this.#comments);
+      render(filmCommentsComponent, commentsList);
+    });
+
+    document.body.classList.add('hide-overflow');
+
+    // Обработчик на ESC для закрытия попапа
+    const escKeyDownHandler = (evt) => {
+      if(isEsc(evt)) {
+        evt.preventDefault();
+        document.removeEventListener('keydown', escKeyDownHandler);
+        filmCardDetailComponent.element.remove();
+        document.body.classList.remove('hide-overflow');
+      }
+    };
+
+    // Обработчик на click по кнопке закрытия попапа
+    const filmCardDetailCloseButtonClickHandler = () => {
+      document.removeEventListener('keydown', escKeyDownHandler);
+      filmCardDetailComponent.element.remove();
+      document.body.classList.remove('hide-overflow');
+    };
+
+    // Добавляет слушателя на кропку закрытия
+    const closeFilmCardDetailButton = filmCardDetailComponent.element.querySelector('.film-details__close-btn');
+    closeFilmCardDetailButton.addEventListener('click', filmCardDetailCloseButtonClickHandler);
+    document.addEventListener('keydown', escKeyDownHandler);
   };
 
   #renderFilmCards = (from, to) => {
@@ -121,11 +116,10 @@ export default class CinemaddictPresenter {
 
   #renderShowMoreButton = () => {
     render(this.#showMoreButton, this.#cinemaddictContainer);
-    // Добавляет обработчик на клик на кнопку show more
-    this.#showMoreButton.setClickHandler(this.#onShowMoreButtonClick);
+    this.#showMoreButton.setClickHandler(this.#showMoreButtonClickHandler);
   };
 
-  #onShowMoreButtonClick = () => {
+  #showMoreButtonClickHandler = () => {
     this.#movies
       .slice(this.#renderedMovies, this.#renderedMovies + FILM_COUNT_PER_STEP)
       .forEach((movie) => this.#renderFilmCard(movie));
