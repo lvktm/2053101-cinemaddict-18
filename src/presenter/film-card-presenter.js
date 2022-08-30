@@ -3,20 +3,21 @@ import FilmCardView from '../view/film-card-view.js';
 import { render } from '../framework/render.js';
 
 export default class FilmCardPresenter {
-  #container;
-  #movies;
-  #comments;
+  #movies = null;
+  #comments = null;
+  #movie = null;
+  #filmCardComponent = null;
+  #filmListContainerComponent = null;
 
   constructor(movies, container, comments) {
     this.#movies = movies;
-    this.#container = container;
+    this.#filmListContainerComponent = container;
     this.#comments = comments;
   }
 
-  init(movie) {
-
-    const filmCardComponent = new FilmCardView(movie);
-    const filmListContainerComponent = this.#container;
+  init = (movie) => {
+    this.#movie = movie;
+    this.#filmCardComponent = new FilmCardView(this.#movie);
 
     // Обработчик отрисовывает попап с комментариями
     const filmCardClickHandler = (evt) => {
@@ -25,7 +26,7 @@ export default class FilmCardPresenter {
         this.#movies.forEach((film) => {
 
           if(film.id.toString() === currentElement.parentNode.parentNode.dataset.id) {
-            const filmCardDetailPresenter = new FilmCardDetailPresenter(movie, this.#container, this.#comments);
+            const filmCardDetailPresenter = new FilmCardDetailPresenter(this.#movie, this.#filmListContainerComponent, this.#comments);
             filmCardDetailPresenter.renderFilmCardDetail();
           }
 
@@ -33,10 +34,10 @@ export default class FilmCardPresenter {
       }
     };
 
-    filmCardComponent.setFilmCardClickHandler(filmCardClickHandler);
+    this.#filmCardComponent.setFilmCardClickHandler(filmCardClickHandler);
 
-    render(filmCardComponent, filmListContainerComponent);
+    render(this.#filmCardComponent, this.#filmListContainerComponent);
 
-  }
+  };
 
 }

@@ -5,7 +5,7 @@ import FilmsTemplateView from '../view/films-template-view.js';
 import FilterView from '../view/filter-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import SortView from '../view/sort-view.js';
-import { render } from '../framework/render.js';
+import { render, remove } from '../framework/render.js';
 import FilmCardPresenter from './film-card-presenter.js';
 
 const FILM_COUNT_PER_STEP = 5;
@@ -72,7 +72,7 @@ export default class CinemaddictPresenter {
     this.#renderedMovies += FILM_COUNT_PER_STEP;
 
     if(this.#renderedMovies >= this.#movies.length) {
-      this.#showMoreButton.element.style.display = 'none';
+      remove(this.#showMoreButton);
       render (new EmptyMessageView(), this.#filmsListContainerComponent.element.parentNode);
     }
   };
