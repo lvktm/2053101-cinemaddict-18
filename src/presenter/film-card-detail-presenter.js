@@ -4,17 +4,18 @@ import { isEsc } from '../util.js';
 import { render } from '../framework/render.js';
 
 export default class FilmCardDetailPresenter {
-  #container;
-  #movie;
-  #comments;
+  #container = null;
+  #movie = null;
+  #comments = null;
 
-  constructor(movie, container, comments) {
+  constructor(container, comments) {
     this.#container = container;
-    this.#movie = movie;
     this.#comments = comments;
   }
 
-  renderFilmCardDetail = () => {
+  init = (movie) => {
+    this.#movie = movie;
+
     const filmCardDetailComponent = new FilmCardDetailView(this.#movie);
     render(filmCardDetailComponent, this.#container);
 

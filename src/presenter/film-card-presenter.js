@@ -8,6 +8,7 @@ export default class FilmCardPresenter {
   #movie = null;
   #filmCardComponent = null;
   #filmListContainerComponent = null;
+  #filmCardDetailPresenter = null;
 
   constructor(movies, container, comments) {
     this.#movies = movies;
@@ -18,26 +19,23 @@ export default class FilmCardPresenter {
   init = (movie) => {
     this.#movie = movie;
     this.#filmCardComponent = new FilmCardView(this.#movie);
+    this.#filmCardDetailPresenter = new FilmCardDetailPresenter(this.#filmListContainerComponent, this.#comments);
 
-    // Обработчик отрисовывает попап с комментариями
-    const filmCardClickHandler = (evt) => {
-      const currentElement = evt.target;
-      if(currentElement.tagName === 'IMG') {
-        this.#movies.forEach((film) => {
-
-          if(film.id.toString() === currentElement.parentNode.parentNode.dataset.id) {
-            const filmCardDetailPresenter = new FilmCardDetailPresenter(this.#movie, this.#filmListContainerComponent, this.#comments);
-            filmCardDetailPresenter.renderFilmCardDetail();
-          }
-
-        });
-      }
-    };
-
-    this.#filmCardComponent.setFilmCardClickHandler(filmCardClickHandler);
+    this.#filmCardComponent.setFilmCardClickHandler(this.#filmCardClickHandler);
 
     render(this.#filmCardComponent, this.#filmListContainerComponent);
 
   };
 
+  // Обработчик отрисовывает попап с комментариями
+  #filmCardClickHandler = (evt) => {
+    const filmCardId = this.#filmCardComponent.getFilmCardId(evt);
+
+    if(!filmCardId) {
+      return;
+    }
+
+    const filmCard = this.#movies.find((film) => film.id.toString() === filmCardId);
+    this.#filmCardDetailPresenter.init(filmCard);
+  };
 }

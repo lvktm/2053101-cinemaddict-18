@@ -71,4 +71,8 @@ export default class FilmCardView extends AbstractView {
     evt.preventDefault();
     this._callback.click(evt);
   };
+
+  getFilmCardId = (evt) => evt.target.tagName === 'IMG'
+    ? evt.target.parentNode.parentNode.dataset.id
+    : null;
 }
