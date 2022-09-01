@@ -1,6 +1,6 @@
 import FilmCardDetailPresenter from './film-card-detail-presenter.js';
 import FilmCardView from '../view/film-card-view.js';
-import { render } from '../framework/render.js';
+import { render, remove } from '../framework/render.js';
 
 export default class FilmCardPresenter {
   #movies = null;
@@ -37,5 +37,10 @@ export default class FilmCardPresenter {
 
     const filmCard = this.#movies.find((film) => film.id.toString() === filmCardId);
     this.#filmCardDetailPresenter.init(filmCard);
+  };
+
+  destroy = () => {
+    remove(this.#filmCardComponent);
+    remove(this.#filmCardDetailPresenter);
   };
 }

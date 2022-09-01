@@ -4,13 +4,13 @@ import { titles, posters, descriptions, ageRatings, directors, writers, actors, 
 import dayjs from 'dayjs';
 import objectSupport from 'dayjs/plugin/objectSupport'; // ES 2015
 import relativeTime from 'dayjs/plugin/relativeTime'; // ES 2015
+import { nanoid } from 'nanoid';
 
 dayjs.extend(objectSupport); // использование плагина
 dayjs.extend(relativeTime); // использование плагина
 
 const MIN_MINUTES = 30;
 const MAX_MINUTES = 150;
-const MIN_COMMENTS_ID = 1;
 const MAX_COMMENTS_ID = 1000;
 const MIN_ELEMENTS = 0;
 const MAX_ELEMENTS = 10;
@@ -56,7 +56,7 @@ const generateWatchingDate = () => {
 };
 
 export const generateMovie = () => ({
-  id: getRandomInteger(MIN_COMMENTS_ID, MAX_COMMENTS_ID),
+  id: nanoid(),
   comments: generateCommentsId(),
   filmInfo: {
     title: generateTitle(),

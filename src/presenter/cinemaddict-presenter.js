@@ -7,6 +7,7 @@ import ShowMoreButtonView from '../view/show-more-button-view.js';
 import SortView from '../view/sort-view.js';
 import { render, remove } from '../framework/render.js';
 import FilmCardPresenter from './film-card-presenter.js';
+import { updateItem } from '../util.js';
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -22,6 +23,7 @@ export default class CinemaddictPresenter {
   #filmsListContainerComponent = new FilmsListContainerView();
   #showMoreButton = new ShowMoreButtonView();
   #renderedMovies = FILM_COUNT_PER_STEP;
+  #moviePresenter = new Map();
 
   constructor(cinemaddictContainer, movieModel, commentsModel) {
     this.#cinemaddictContainer = cinemaddictContainer;
@@ -51,6 +53,7 @@ export default class CinemaddictPresenter {
       , this.#filmsListContainerComponent.element
       , this.#comments);
     filmCardPresenter.init(movie);
+    this.#moviePresenter.set(movie.id, filmCardPresenter);
   };
 
   #renderFilmCards = (from, to) => {
@@ -61,10 +64,10 @@ export default class CinemaddictPresenter {
 
   #renderShowMoreButton = () => {
     render(this.#showMoreButton, this.#cinemaddictContainer);
-    this.#showMoreButton.setClickHandler(this.#showMoreButtonClickHandler);
+    this.#showMoreButton.setClickHandler(this.#handleShowMoreButtonClick);
   };
 
-  #showMoreButtonClickHandler = () => {
+  #handleShowMoreButtonClick = () => {
     this.#movies
       .slice(this.#renderedMovies, this.#renderedMovies + FILM_COUNT_PER_STEP)
       .forEach((movie) => this.#renderFilmCard(movie));
@@ -77,6 +80,11 @@ export default class CinemaddictPresenter {
     }
   };
 
+  #handleFilmCardChange = (updatedFilmCard) => {
+    this.#movies = updateItem(this.#movies, updatedFilmCard);
+    this.#moviePresenter.get(updatedFilmCard.id).init(updatedFilmCard);
+  };
+
   #renderFilmBoard = () => {
     this.#renderFilter();
 
@@ -86,6 +94,13 @@ export default class CinemaddictPresenter {
 
     this.#renderFilmCards(0, FILM_COUNT_PER_STEP);
 
+    this.#renderShowMoreButton();
+  };
+
+  #clearMovieList = () => {
+    this.#moviePresenter.forEach((presenter) => presenter.destroy());
+    this.#moviePresenter.clear();
+    this.#renderedMovies = FILM_COUNT_PER_STEP;
     this.#renderShowMoreButton();
   };
 
