@@ -1,12 +1,14 @@
 import CommentsView from '../view/comments-view.js';
 import FilmCardDetailView from '../view/film-card-detail-view.js';
 import { isEsc } from '../util.js';
-import { render } from '../framework/render.js';
+import { render, remove } from '../framework/render.js';
 
 export default class FilmCardDetailPresenter {
   #container = null;
   #movie = null;
   #comments = null;
+  #commentsList;
+  #filmCardDetailComponent;
 
   constructor(container, comments) {
     this.#container = container;
@@ -16,39 +18,39 @@ export default class FilmCardDetailPresenter {
   init = (movie) => {
     this.#movie = movie;
 
-    const filmCardDetailComponent = new FilmCardDetailView(this.#movie);
-    render(filmCardDetailComponent, this.#container);
+    this.#filmCardDetailComponent = new FilmCardDetailView(this.#movie);
+    render(this.#filmCardDetailComponent, this.#container);
 
-    const commentsList = document.querySelector('.film-details__comments-list');
+    this.#commentsList = this.#filmCardDetailComponent.getCommentsList();
 
     this.#movie.comments.forEach((comment) => {
       const filmCommentsComponent = new CommentsView(comment, this.#comments);
-      render(filmCommentsComponent, commentsList);
+      render(filmCommentsComponent, this.#commentsList);
     });
 
-    document.body.classList.add('hide-overflow');
+    this.#filmCardDetailComponent.changeBodyClass();
 
-    // Обработчик на ESC для закрытия попапа
-    const escKeyDownHandler = (evt) => {
-      if(isEsc(evt)) {
-        evt.preventDefault();
-        document.removeEventListener('keydown', escKeyDownHandler);
-        filmCardDetailComponent.element.remove();
-        document.body.classList.remove('hide-overflow');
-      }
-    };
+    this.#filmCardDetailComponent.setCloseButtonHandler(this.#handleCloseButtonClick);
 
-    // Обработчик на click по кнопке закрытия попапа
-    const filmCardDetailCloseButtonClickHandler = () => {
-      document.removeEventListener('keydown', escKeyDownHandler);
-      filmCardDetailComponent.element.remove();
-      document.body.classList.remove('hide-overflow');
-    };
+    document.addEventListener('keydown', this.#handleEscKeyDown);
+  };
 
-    // Добавляет слушателя на кропку закрытия
-    const closeFilmCardDetailButton = filmCardDetailComponent.element.querySelector('.film-details__close-btn');
-    closeFilmCardDetailButton.addEventListener('click', filmCardDetailCloseButtonClickHandler);
-    document.addEventListener('keydown', escKeyDownHandler);
+  #handleCloseButtonClick = () => {
+    this.#closeFilmCardDetail();
+  };
+
+  #handleEscKeyDown = (evt) => {
+    if(!isEsc) {
+      return;
+    }
+    evt.preventDefault();
+    this.#closeFilmCardDetail();
+  };
+
+  #closeFilmCardDetail = () => {
+    document.removeEventListener('keydown', this.#handleEscKeyDown);
+    this.#filmCardDetailComponent.changeBodyClass();
+    remove(this.#filmCardDetailComponent);
   };
 
 }

@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeReleaseDateDetail, formatMinutesToTime } from '../util.js';
+import { isEsc } from '../util.js';
 
 const createFilmCardDetail = (movie) => {
   const {comments,
@@ -165,4 +166,20 @@ export default class FilmCardDetailView extends AbstractView {
   get template() {
     return createFilmCardDetail(this.movie);
   }
+
+  getCommentsList = () => this.element.querySelector('.film-details__comments-list');
+
+  setCloseButtonHandler = (callback) => {
+    this._callback.closeButtonClik = callback;
+    this
+      .element
+      .querySelector('.film-details__close-btn')
+      .addEventListener('click', this.#closeButtonHandler);
+  };
+
+  #closeButtonHandler = () => {
+    this._callback.closeButtonClik();
+  };
+
+  changeBodyClass = () => document.body.classList.toggle('hide-overflow');
 }
