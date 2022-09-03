@@ -51,7 +51,8 @@ export default class CinemaddictPresenter {
   #renderFilmCard = (movie) => {
     const filmCardPresenter = new FilmCardPresenter(this.#movies
       , this.#filmsListContainerComponent.element
-      , this.#comments);
+      , this.#comments
+      , this.#handleFilmCardChange);
     filmCardPresenter.init(movie);
     this.#moviePresenter.set(movie.id, filmCardPresenter);
   };
@@ -82,6 +83,7 @@ export default class CinemaddictPresenter {
 
   #handleFilmCardChange = (updatedFilmCard) => {
     this.#movies = updateItem(this.#movies, updatedFilmCard);
+    this.#moviePresenter.get(updatedFilmCard.id).set(this.#movies);
     this.#moviePresenter.get(updatedFilmCard.id).init(updatedFilmCard);
   };
 
@@ -97,7 +99,7 @@ export default class CinemaddictPresenter {
     this.#renderShowMoreButton();
   };
 
-  #clearMovieList = () => {
+  #clearFilmList = () => {
     this.#moviePresenter.forEach((presenter) => presenter.destroy());
     this.#moviePresenter.clear();
     this.#renderedMovies = FILM_COUNT_PER_STEP;

@@ -16,7 +16,13 @@ const createFilmCard = (movie) => {
       totalRating,
       runtime,
       genre,
-      description}
+      description},
+    userDetails: {
+      watchlist,
+      alreadyWatched,
+      watchingDate,
+      favorite
+    }
   } = movie;
 
   const releaseDate = humanizeReleaseDate(date);
@@ -30,6 +36,10 @@ const createFilmCard = (movie) => {
     return description;
   };
   const shortDescription = getShortDescription();
+
+  const isAddedToWatchList = () => watchlist
+    ? ' film-card__controls-item--active'
+    : '';
 
   return (
     `<article class="film-card" data-id="${ id }">
@@ -46,7 +56,7 @@ const createFilmCard = (movie) => {
     <span class="film-card__comments">${ commentsCount } comments</span>
   </a>
   <div class="film-card__controls">
-    <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
+    <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${ isAddedToWatchList ()}" type="button">Add to watchlist</button>
     <button class="film-card__controls-item film-card__controls-item--mark-as-watched film-card__controls-item--active" type="button">Mark as watched</button>
     <button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
   </div>
@@ -62,6 +72,18 @@ export default class FilmCardView extends AbstractView {
     return createFilmCard(this.movie);
   }
 
+  setAddToWatchListButtonClick = (callback) => {
+    this._callback.addToWatchListButtonClick = callback;
+    this.element
+      .querySelector('.film-card__controls-item--add-to-watchlist')
+      .addEventListener('click', this.#addToWatchListHandler);
+  };
+
+  #addToWatchListHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.addToWatchListButtonClick();
+  };
+
   setFilmCardClickHandler = (callback) => {
     this._callback.click = callback;
     this.element.addEventListener('click', this.#filmCardClickHandler);
@@ -69,6 +91,7 @@ export default class FilmCardView extends AbstractView {
 
   #filmCardClickHandler = (evt) => {
     evt.preventDefault();
+    console.log('starting render popup');
     this._callback.click(evt);
   };
 

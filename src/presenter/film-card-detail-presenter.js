@@ -18,7 +18,7 @@ export default class FilmCardDetailPresenter {
   init = (movie) => {
     this.#movie = movie;
 
-    this.#filmCardDetailComponent = new FilmCardDetailView(this.#movie);
+    this.#filmCardDetailComponent = new FilmCardDetailView(this.#movie);console.log(this.#filmCardDetailComponent);
     render(this.#filmCardDetailComponent, this.#container);
 
     this.#commentsList = this.#filmCardDetailComponent.getCommentsList();
