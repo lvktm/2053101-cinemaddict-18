@@ -83,7 +83,7 @@ export default class CinemaddictPresenter {
 
   #handleFilmCardChange = (updatedFilmCard) => {
     this.#movies = updateItem(this.#movies, updatedFilmCard);
-    this.#moviePresenter.get(updatedFilmCard.id).set(this.#movies);
+    this.#moviePresenter.get(updatedFilmCard.id).movies = this.#movies;
     this.#moviePresenter.get(updatedFilmCard.id).init(updatedFilmCard);
   };
 

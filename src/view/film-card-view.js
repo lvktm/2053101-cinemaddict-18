@@ -41,6 +41,8 @@ const createFilmCard = (movie) => {
     ? ' film-card__controls-item--active'
     : '';
 
+  const toWatchList = isAddedToWatchList();
+
   return (
     `<article class="film-card" data-id="${ id }">
   <a class="film-card__link">
@@ -56,7 +58,7 @@ const createFilmCard = (movie) => {
     <span class="film-card__comments">${ commentsCount } comments</span>
   </a>
   <div class="film-card__controls">
-    <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${ isAddedToWatchList ()}" type="button">Add to watchlist</button>
+    <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${ toWatchList }" type="button">Add to watchlist</button>
     <button class="film-card__controls-item film-card__controls-item--mark-as-watched film-card__controls-item--active" type="button">Mark as watched</button>
     <button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
   </div>
