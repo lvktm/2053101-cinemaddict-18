@@ -93,7 +93,6 @@ export default class FilmCardView extends AbstractView {
 
   #filmCardClickHandler = (evt) => {
     evt.preventDefault();
-    console.log('starting render popup');
     this._callback.click(evt);
   };
 

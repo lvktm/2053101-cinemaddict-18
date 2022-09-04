@@ -23,7 +23,7 @@ export default class CinemaddictPresenter {
   #filmsListContainerComponent = new FilmsListContainerView();
   #showMoreButton = new ShowMoreButtonView();
   #renderedMovies = FILM_COUNT_PER_STEP;
-  #moviePresenter = new Map();
+  #moviePresenters = new Map();
 
   constructor(cinemaddictContainer, movieModel, commentsModel) {
     this.#cinemaddictContainer = cinemaddictContainer;
@@ -54,7 +54,7 @@ export default class CinemaddictPresenter {
       , this.#comments
       , this.#handleFilmCardChange);
     filmCardPresenter.init(movie);
-    this.#moviePresenter.set(movie.id, filmCardPresenter);
+    this.#moviePresenters.set(movie.id, filmCardPresenter);
   };
 
   #renderFilmCards = (from, to) => {
@@ -83,8 +83,8 @@ export default class CinemaddictPresenter {
 
   #handleFilmCardChange = (updatedFilmCard) => {
     this.#movies = updateItem(this.#movies, updatedFilmCard);
-    this.#moviePresenter.get(updatedFilmCard.id).movies = this.#movies;
-    this.#moviePresenter.get(updatedFilmCard.id).init(updatedFilmCard);
+    this.#moviePresenters.get(updatedFilmCard.id).movies = this.#movies;
+    this.#moviePresenters.get(updatedFilmCard.id).init(updatedFilmCard);
   };
 
   #renderFilmBoard = () => {
@@ -100,8 +100,8 @@ export default class CinemaddictPresenter {
   };
 
   #clearFilmList = () => {
-    this.#moviePresenter.forEach((presenter) => presenter.destroy());
-    this.#moviePresenter.clear();
+    this.#moviePresenters.forEach((presenter) => presenter.destroy());
+    this.#moviePresenters.clear();
     this.#renderedMovies = FILM_COUNT_PER_STEP;
     this.#renderShowMoreButton();
   };

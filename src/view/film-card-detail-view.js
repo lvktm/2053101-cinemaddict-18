@@ -192,5 +192,17 @@ export default class FilmCardDetailView extends AbstractView {
     this._callback.closeButtonClik();
   };
 
+  setAddToWatchListHandler = (callback) => {
+    this._callback.addToWatchListClick = callback;
+    this
+      .element
+      .querySelector('.film-details__control-button--watchlist')
+      .addEventListener('click', this.#addToWatchListHandler);
+  };
+
+  #addToWatchListHandler = () => {
+    this._callback.addToWatchListClick();
+  };
+
   changeBodyClass = () => document.body.classList.toggle('hide-overflow');
 }

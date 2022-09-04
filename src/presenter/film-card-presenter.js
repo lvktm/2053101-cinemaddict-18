@@ -28,17 +28,17 @@ export default class FilmCardPresenter {
 
   init = (movie) => {
     this.#movie = movie;
-
     const prevFilmCardComponent = this.#filmCardComponent;
-    const prevFilmCardDetailComponent = this.#filmCardDetailComponent;
 
     this.#filmCardComponent = new FilmCardView(this.#movie);
-    this.#filmCardDetailComponent = new FilmCardDetailPresenter(this.#filmListContainerComponent, this.#comments);
+    this.#filmCardDetailComponent = new FilmCardDetailPresenter(this.#filmListContainerComponent,
+      this.#comments,
+      this.#handleAddToWatchListButtonClick);
 
     this.#filmCardComponent.setFilmCardClickHandler(this.#handleFilmCardClick);
     this.#filmCardComponent.setAddToWatchListButtonClick(this.#handleAddToWatchListButtonClick);
 
-    if(prevFilmCardComponent === null || prevFilmCardDetailComponent === null) {
+    if(prevFilmCardComponent === null) {
       render(this.#filmCardComponent, this.#filmListContainerComponent);
       return;
     }
@@ -51,12 +51,8 @@ export default class FilmCardPresenter {
   };
 
   #handleAddToWatchListButtonClick = () => {
-    console.log(this.#movie.userDetails.watchlist);
     this.#movie.userDetails = {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist};
-
     this.#changeFilmCard(this.#movie);
-    console.log(this.#movie.userDetails.watchlist);
-    this.init(this.#movie);
   };
 
   // Обработчик отрисовывает попап с комментариями
