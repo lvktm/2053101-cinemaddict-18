@@ -121,7 +121,7 @@ const createFilmCardDetail = (movie) => {
   
         <section class="film-details__controls">
           <button type="button" class="film-details__control-button film-details__control-button--watchlist ${ toWatchList }" id="watchlist" name="watchlist">Add to watchlist</button>
-          <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched" id="watched" name="watched">Already watched</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watched" id="watched" name="watched">Already watched</button>
           <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
         </section>
       </div>
@@ -190,18 +190,6 @@ export default class FilmCardDetailView extends AbstractView {
 
   #closeButtonHandler = () => {
     this._callback.closeButtonClik();
-  };
-
-  setAddToWatchListHandler = (callback) => {
-    this._callback.addToWatchListClick = callback;
-    this
-      .element
-      .querySelector('.film-details__control-button--watchlist')
-      .addEventListener('click', this.#addToWatchListHandler);
-  };
-
-  #addToWatchListHandler = () => {
-    this._callback.addToWatchListClick();
   };
 
   changeBodyClass = () => document.body.classList.toggle('hide-overflow');

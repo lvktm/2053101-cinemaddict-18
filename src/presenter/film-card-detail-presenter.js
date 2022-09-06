@@ -1,7 +1,8 @@
 import CommentsView from '../view/comments-view.js';
 import FilmCardDetailView from '../view/film-card-detail-view.js';
+import ControlButtonsView from '../view/control-buttons-view.js';
 import { isEsc } from '../util.js';
-import { render, remove, replace } from '../framework/render.js';
+import { render, remove } from '../framework/render.js';
 
 export default class FilmCardDetailPresenter {
   #container = null;
@@ -9,12 +10,13 @@ export default class FilmCardDetailPresenter {
   #comments = null;
   #commentsList = null;
   #filmCardDetailComponent = null;
-  #handleAddToWatchList = null;
+  #changeData = null;
+  #controlButtonsComponent = null;
 
-  constructor(container, comments, handleAddToWatchList) {
+  constructor(container, comments, changeData) {
     this.#container = container;
     this.#comments = comments;
-    this.#handleAddToWatchList = handleAddToWatchList;
+    this.#changeData = changeData;
   }
 
   init = (movie) => {
@@ -22,9 +24,7 @@ export default class FilmCardDetailPresenter {
 
     if(this.#filmCardDetailComponent === null) {
       this.#filmCardDetailComponent = new FilmCardDetailView(this.#movie);
-      render(this.#filmCardDetailComponent, this.#container);
-    } else {
-      this.#closeFilmCardDetail();
+      this.#controlButtonsComponent = new ControlButtonsView(this.#movie);
       render(this.#filmCardDetailComponent, this.#container);
     }
 
@@ -34,7 +34,7 @@ export default class FilmCardDetailPresenter {
     this.#filmCardDetailComponent.changeBodyClass();
 
     this.#filmCardDetailComponent.setCloseButtonHandler(this.#handleCloseButtonClick);
-    this.#filmCardDetailComponent.setAddToWatchListHandler(this.#handlePopupRefresh);
+    this.#controlButtonsComponent.setWatchListButtonClick(this.#handleToWatchListDetailClick);
 
     document.addEventListener('keydown', this.#handleEscKeyDown);
   };
@@ -48,15 +48,14 @@ export default class FilmCardDetailPresenter {
     });
   };
 
+  #handleToWatchListDetailClick = () => {
+    this.#movie.userDetails = {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist};
+    this.#changeData(this.#movie);
+  };
+
   #handleCloseButtonClick = () => {
     this.#closeFilmCardDetail();
   };
-
-  #handlePopupRefresh = () => {
-    this.#handleAddToWatchList();debugger;
-    this.init(this.#movie);
-  };
-
 
   #handleEscKeyDown = (evt) => {
     if(!isEsc(evt)) {

@@ -9,21 +9,13 @@ export default class FilmCardPresenter {
   #filmCardComponent = null;
   #filmListContainerComponent = null;
   #filmCardDetailComponent = null;
-  #changeFilmCard = null;
+  #changeData = null;
 
   constructor(movies, container, comments, changeData) {
     this.#movies = movies;
     this.#filmListContainerComponent = container;
     this.#comments = comments;
-    this.#changeFilmCard = changeData;
-  }
-
-  set movies(movies) {
-    this.#movies = movies;
-  }
-
-  get movies() {
-    return this.#movies;
+    this.#changeData = changeData;
   }
 
   init = (movie) => {
@@ -33,10 +25,10 @@ export default class FilmCardPresenter {
     this.#filmCardComponent = new FilmCardView(this.#movie);
     this.#filmCardDetailComponent = new FilmCardDetailPresenter(this.#filmListContainerComponent,
       this.#comments,
-      this.#handleAddToWatchListButtonClick);
+      this.#changeData);
 
     this.#filmCardComponent.setFilmCardClickHandler(this.#handleFilmCardClick);
-    this.#filmCardComponent.setAddToWatchListButtonClick(this.#handleAddToWatchListButtonClick);
+    this.#filmCardComponent.setToWatchListClick(this.#handleToWatchListClick);
 
     if(prevFilmCardComponent === null) {
       render(this.#filmCardComponent, this.#filmListContainerComponent);
@@ -50,9 +42,9 @@ export default class FilmCardPresenter {
     remove(prevFilmCardComponent);
   };
 
-  #handleAddToWatchListButtonClick = () => {
+  #handleToWatchListClick = () => {
     this.#movie.userDetails = {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist};
-    this.#changeFilmCard(this.#movie);
+    this.#changeData(this.#movie);
   };
 
   // Обработчик отрисовывает попап с комментариями

@@ -74,8 +74,8 @@ export default class FilmCardView extends AbstractView {
     return createFilmCard(this.movie);
   }
 
-  setAddToWatchListButtonClick = (callback) => {
-    this._callback.addToWatchListButtonClick = callback;
+  setToWatchListClick = (callback) => {
+    this._callback.toWatchListClick = callback;
     this.element
       .querySelector('.film-card__controls-item--add-to-watchlist')
       .addEventListener('click', this.#addToWatchListHandler);
@@ -83,7 +83,7 @@ export default class FilmCardView extends AbstractView {
 
   #addToWatchListHandler = (evt) => {
     evt.preventDefault();
-    this._callback.addToWatchListButtonClick();
+    this._callback.toWatchListClick();
   };
 
   setFilmCardClickHandler = (callback) => {
