@@ -28,7 +28,9 @@ export default class FilmCardPresenter {
       this.#changeData);
 
     this.#filmCardComponent.setFilmCardClickHandler(this.#handleFilmCardClick);
-    this.#filmCardComponent.setToWatchListClick(this.#handleToWatchListClick);
+    this.#filmCardComponent.setToWatchListButtonClickHandler(this.#handleToWatchListClick);
+    this.#filmCardComponent.setWatchedButtonClickHandler(this.#handleWatchedClick);
+    this.#filmCardComponent.setFavoriteButtonClickHandler(this.#handleFavoriteClick);
 
     if(prevFilmCardComponent === null) {
       render(this.#filmCardComponent, this.#filmListContainerComponent);
@@ -44,6 +46,16 @@ export default class FilmCardPresenter {
 
   #handleToWatchListClick = () => {
     this.#movie.userDetails = {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist};
+    this.#changeData(this.#movie);
+  };
+
+  #handleWatchedClick = () => {
+    this.#movie.userDetails = {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched};
+    this.#changeData(this.#movie);
+  };
+
+  #handleFavoriteClick = () => {
+    this.#movie.userDetails = {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite};
     this.#changeData(this.#movie);
   };
 

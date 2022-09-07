@@ -20,7 +20,6 @@ const createFilmCard = (movie) => {
     userDetails: {
       watchlist,
       alreadyWatched,
-      watchingDate,
       favorite
     }
   } = movie;
@@ -37,11 +36,13 @@ const createFilmCard = (movie) => {
   };
   const shortDescription = getShortDescription();
 
-  const isAddedToWatchList = () => watchlist
+  const activateControlButton = (controlButton) => controlButton
     ? ' film-card__controls-item--active'
     : '';
 
-  const toWatchList = isAddedToWatchList();
+  const toWatchListButton = activateControlButton(watchlist);
+  const alreadyWatchedButton = activateControlButton(alreadyWatched);
+  const favoriteButton = activateControlButton(favorite);
 
   return (
     `<article class="film-card" data-id="${ id }">
@@ -58,9 +59,9 @@ const createFilmCard = (movie) => {
     <span class="film-card__comments">${ commentsCount } comments</span>
   </a>
   <div class="film-card__controls">
-    <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${ toWatchList }" type="button">Add to watchlist</button>
-    <button class="film-card__controls-item film-card__controls-item--mark-as-watched film-card__controls-item--active" type="button">Mark as watched</button>
-    <button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
+    <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${ toWatchListButton }" type="button">Add to watchlist</button>
+    <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${ alreadyWatchedButton }" type="button">Mark as watched</button>
+    <button class="film-card__controls-item film-card__controls-item--favorite ${ favoriteButton }" type="button">Mark as favorite</button>
   </div>
 </article>`);};
 
@@ -74,16 +75,40 @@ export default class FilmCardView extends AbstractView {
     return createFilmCard(this.movie);
   }
 
-  setToWatchListClick = (callback) => {
-    this._callback.toWatchListClick = callback;
+  setToWatchListButtonClickHandler = (callback) => {
+    this._callback.toWatchListButtonClick = callback;
     this.element
       .querySelector('.film-card__controls-item--add-to-watchlist')
-      .addEventListener('click', this.#addToWatchListHandler);
+      .addEventListener('click', this.#toWatchListButtonClickHandler);
   };
 
-  #addToWatchListHandler = (evt) => {
+  #toWatchListButtonClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.toWatchListClick();
+    this._callback.toWatchListButtonClick();
+  };
+
+  setWatchedButtonClickHandler = (callback) => {
+    this._callback.watchedButtonClick = callback;
+    this.element
+      .querySelector('.film-card__controls-item--mark-as-watched')
+      .addEventListener('click', this.#watchedButtonClickHandler);
+  };
+
+  #watchedButtonClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.watchedButtonClick();
+  };
+
+  setFavoriteButtonClickHandler = (callback) => {
+    this._callback.favoriteButtonClick = callback;
+    this.element
+      .querySelector('.film-card__controls-item--favorite')
+      .addEventListener('click', this.#favoriteButtonClickHandler);
+  };
+
+  #favoriteButtonClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteButtonClick();
   };
 
   setFilmCardClickHandler = (callback) => {

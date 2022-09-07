@@ -1,6 +1,5 @@
 import CommentsView from '../view/comments-view.js';
 import FilmCardDetailView from '../view/film-card-detail-view.js';
-import ControlButtonsView from '../view/control-buttons-view.js';
 import { isEsc } from '../util.js';
 import { render, remove } from '../framework/render.js';
 
@@ -11,7 +10,6 @@ export default class FilmCardDetailPresenter {
   #commentsList = null;
   #filmCardDetailComponent = null;
   #changeData = null;
-  #controlButtonsComponent = null;
 
   constructor(container, comments, changeData) {
     this.#container = container;
@@ -22,19 +20,17 @@ export default class FilmCardDetailPresenter {
   init = (movie) => {
     this.#movie = movie;
 
-    if(this.#filmCardDetailComponent === null) {
-      this.#filmCardDetailComponent = new FilmCardDetailView(this.#movie);
-      this.#controlButtonsComponent = new ControlButtonsView(this.#movie);
-      render(this.#filmCardDetailComponent, this.#container);
-    }
-
+    this.#filmCardDetailComponent = new FilmCardDetailView(this.#movie);
+    render(this.#filmCardDetailComponent, this.#container);
 
     this.#renderComments();
 
     this.#filmCardDetailComponent.changeBodyClass();
 
     this.#filmCardDetailComponent.setCloseButtonHandler(this.#handleCloseButtonClick);
-    this.#controlButtonsComponent.setWatchListButtonClick(this.#handleToWatchListDetailClick);
+    this.#filmCardDetailComponent.setToWatchListButtonClickHandler(this.#handleToWatchListDetailClick);
+    this.#filmCardDetailComponent.setWatchedButtonClickHandler(this.#handleWatchedDetailClick);
+    this.#filmCardDetailComponent.setFavoriteButtonClickHandler(this.#handleFavoriteDetailClick);
 
     document.addEventListener('keydown', this.#handleEscKeyDown);
   };
@@ -51,7 +47,22 @@ export default class FilmCardDetailPresenter {
   #handleToWatchListDetailClick = () => {
     this.#movie.userDetails = {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist};
     this.#changeData(this.#movie);
+    this.#activateControlButton(this.#filmCardDetailComponent.getToWatchListButton());
   };
+
+  #handleWatchedDetailClick = () => {
+    this.#movie.userDetails = {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched};
+    this.#changeData(this.#movie);
+    this.#activateControlButton(this.#filmCardDetailComponent.getWatchedButton());
+  };
+
+  #handleFavoriteDetailClick = () => {
+    this.#movie.userDetails = {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite};
+    this.#changeData(this.#movie);
+    this.#activateControlButton(this.#filmCardDetailComponent.getFavoriteButton());
+  };
+
+  #activateControlButton = (controlButton) => controlButton.classList.toggle('film-details__control-button--active');
 
   #handleCloseButtonClick = () => {
     this.#closeFilmCardDetail();

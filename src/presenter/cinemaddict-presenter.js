@@ -52,7 +52,7 @@ export default class CinemaddictPresenter {
     const filmCardPresenter = new FilmCardPresenter(this.#movies
       , this.#filmsListContainerComponent.element
       , this.#comments
-      , this.#handleFilmCardChange);
+      , this.#changeData);
     filmCardPresenter.init(movie);
     this.#moviePresenters.set(movie.id, filmCardPresenter);
   };
@@ -81,7 +81,7 @@ export default class CinemaddictPresenter {
     }
   };
 
-  #handleFilmCardChange = (updatedFilmCard) => {
+  #changeData = (updatedFilmCard) => {
     this.#movies = updateItem(this.#movies, updatedFilmCard);
     this.#moviePresenters.get(updatedFilmCard.id).init(updatedFilmCard);
   };
