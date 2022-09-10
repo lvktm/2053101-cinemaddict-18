@@ -1,7 +1,7 @@
 import CommentsView from '../view/comments-view.js';
 import FilmCardDetailView from '../view/film-card-detail-view.js';
 import { isEsc } from '../util.js';
-import { render, remove } from '../framework/render.js';
+import { render, remove, replace } from '../framework/render.js';
 
 export default class FilmCardDetailPresenter {
   #container = null;
@@ -10,6 +10,7 @@ export default class FilmCardDetailPresenter {
   #commentsList = null;
   #filmCardDetailComponent = null;
   #changeData = null;
+  #prevFilmCardDetailComponent = null;
 
   constructor(container, comments, changeData) {
     this.#container = container;
@@ -19,20 +20,29 @@ export default class FilmCardDetailPresenter {
 
   init = (movie) => {
     this.#movie = movie;
+    this.#prevFilmCardDetailComponent = this.#filmCardDetailComponent;
 
     this.#filmCardDetailComponent = new FilmCardDetailView(this.#movie);
-    render(this.#filmCardDetailComponent, this.#container);
-
-    this.#renderComments();
-
-    this.#filmCardDetailComponent.changeBodyClass();
 
     this.#filmCardDetailComponent.setCloseButtonHandler(this.#handleCloseButtonClick);
     this.#filmCardDetailComponent.setToWatchListButtonClickHandler(this.#handleToWatchListDetailClick);
     this.#filmCardDetailComponent.setWatchedButtonClickHandler(this.#handleWatchedDetailClick);
     this.#filmCardDetailComponent.setFavoriteButtonClickHandler(this.#handleFavoriteDetailClick);
 
-    document.addEventListener('keydown', this.#handleEscKeyDown);
+    if(this.#prevFilmCardDetailComponent === null) {
+      render(this.#filmCardDetailComponent, this.#container);
+      this.#renderComments();
+
+      this.#filmCardDetailComponent.changeBodyClass();
+
+      document.addEventListener('keydown', this.#handleEscKeyDown);
+      return;
+    }
+
+    if(this.#container.contains(this.#prevFilmCardDetailComponent.element)) {
+      replace(this.#filmCardDetailComponent, this.#prevFilmCardDetailComponent);
+      this.#renderComments();
+    }
   };
 
   #renderComments = () => {
@@ -47,22 +57,17 @@ export default class FilmCardDetailPresenter {
   #handleToWatchListDetailClick = () => {
     this.#movie.userDetails = {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist};
     this.#changeData(this.#movie);
-    this.#activateControlButton(this.#filmCardDetailComponent.getToWatchListButton());
   };
 
   #handleWatchedDetailClick = () => {
     this.#movie.userDetails = {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched};
     this.#changeData(this.#movie);
-    this.#activateControlButton(this.#filmCardDetailComponent.getWatchedButton());
   };
 
   #handleFavoriteDetailClick = () => {
     this.#movie.userDetails = {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite};
     this.#changeData(this.#movie);
-    this.#activateControlButton(this.#filmCardDetailComponent.getFavoriteButton());
   };
-
-  #activateControlButton = (controlButton) => controlButton.classList.toggle('film-details__control-button--active');
 
   #handleCloseButtonClick = () => {
     this.#closeFilmCardDetail();
@@ -80,6 +85,7 @@ export default class FilmCardDetailPresenter {
     document.removeEventListener('keydown', this.#handleEscKeyDown);
     this.#filmCardDetailComponent.changeBodyClass();
     remove(this.#filmCardDetailComponent);
+    this.#filmCardDetailComponent = null;
   };
 
 }

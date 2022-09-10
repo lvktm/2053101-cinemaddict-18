@@ -193,13 +193,12 @@ export default class FilmCardDetailView extends AbstractView {
     this._callback.closeButtonClik();
   };
 
-  getToWatchListButton = () => document.querySelector('#watchlist');
-  getWatchedButton = () => document.querySelector('#watched');
-  getFavoriteButton = () => document.querySelector('#favorite');
-
   setToWatchListButtonClickHandler = (callback) => {
     this._callback.toWatchedListButtonClick = callback;
-    this.getToWatchListButton().addEventListener('click', this.#watchListButtonClickHandler);
+    this
+      .element
+      .querySelector('#watchlist')
+      .addEventListener('click', this.#watchListButtonClickHandler);
   };
 
   #watchListButtonClickHandler = (evt) => {
@@ -209,7 +208,10 @@ export default class FilmCardDetailView extends AbstractView {
 
   setWatchedButtonClickHandler = (callback) => {
     this._callback.watchedButtonClick = callback;
-    this.getWatchedButton().addEventListener('click', this.#watchedButtonClickHandler);
+    this
+      .element
+      .querySelector('#watched')
+      .addEventListener('click', this.#watchedButtonClickHandler);
   };
 
   #watchedButtonClickHandler = (evt) => {
@@ -219,7 +221,10 @@ export default class FilmCardDetailView extends AbstractView {
 
   setFavoriteButtonClickHandler = (callback) => {
     this._callback.favoriteButtonClick = callback;
-    this.getFavoriteButton().addEventListener('click', this.#favoriteButtonClickHandler);
+    this
+      .element
+      .querySelector('#favorite')
+      .addEventListener('click', this.#favoriteButtonClickHandler);
   };
 
   #favoriteButtonClickHandler = (evt) => {

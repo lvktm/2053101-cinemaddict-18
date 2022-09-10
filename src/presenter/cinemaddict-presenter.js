@@ -1,4 +1,5 @@
 import EmptyMessageView from '../view/empty-message-view.js';
+import FilmCardDetailPresenter from './film-card-detail-presenter.js';
 import FilmsListContainerView from '../view/films-list-container-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import FilmsTemplateView from '../view/films-template-view.js';
@@ -24,6 +25,7 @@ export default class CinemaddictPresenter {
   #showMoreButton = new ShowMoreButtonView();
   #renderedMovies = FILM_COUNT_PER_STEP;
   #moviePresenters = new Map();
+  #movieDetailPresenters = new Map();
 
   constructor(cinemaddictContainer, movieModel, commentsModel) {
     this.#cinemaddictContainer = cinemaddictContainer;
@@ -49,12 +51,22 @@ export default class CinemaddictPresenter {
   };
 
   #renderFilmCard = (movie) => {
-    const filmCardPresenter = new FilmCardPresenter(this.#movies
-      , this.#filmsListContainerComponent.element
-      , this.#comments
-      , this.#changeData);
+    const filmCardDetailPresenter = new FilmCardDetailPresenter(
+      this.#filmsListContainerComponent.element,
+      this.#comments,
+      this.#changeData
+    );
+
+    const filmCardPresenter = new FilmCardPresenter(
+      filmCardDetailPresenter,
+      this.#movies,
+      this.#filmsListContainerComponent.element,
+      this.#changeData
+    );
+
     filmCardPresenter.init(movie);
     this.#moviePresenters.set(movie.id, filmCardPresenter);
+    this.#movieDetailPresenters.set(movie.id, filmCardDetailPresenter);
   };
 
   #renderFilmCards = (from, to) => {
@@ -84,6 +96,7 @@ export default class CinemaddictPresenter {
   #changeData = (updatedFilmCard) => {
     this.#movies = updateItem(this.#movies, updatedFilmCard);
     this.#moviePresenters.get(updatedFilmCard.id).init(updatedFilmCard);
+    this.#movieDetailPresenters.get(updatedFilmCard.id).init(updatedFilmCard);
   };
 
   #renderFilmBoard = () => {

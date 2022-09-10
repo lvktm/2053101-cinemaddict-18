@@ -1,20 +1,18 @@
-import FilmCardDetailPresenter from './film-card-detail-presenter.js';
 import FilmCardView from '../view/film-card-view.js';
 import { render, remove, replace } from '../framework/render.js';
 
 export default class FilmCardPresenter {
   #movies = null;
-  #comments = null;
   #movie = null;
   #filmCardComponent = null;
   #filmListContainerComponent = null;
-  #filmCardDetailComponent = null;
+  #filmCardDetailPresenter = null;
   #changeData = null;
 
-  constructor(movies, container, comments, changeData) {
+  constructor(filmCardDetailPresenter, movies, container, changeData) {
+    this.#filmCardDetailPresenter = filmCardDetailPresenter;
     this.#movies = movies;
     this.#filmListContainerComponent = container;
-    this.#comments = comments;
     this.#changeData = changeData;
   }
 
@@ -23,9 +21,6 @@ export default class FilmCardPresenter {
     const prevFilmCardComponent = this.#filmCardComponent;
 
     this.#filmCardComponent = new FilmCardView(this.#movie);
-    this.#filmCardDetailComponent = new FilmCardDetailPresenter(this.#filmListContainerComponent,
-      this.#comments,
-      this.#changeData);
 
     this.#filmCardComponent.setFilmCardClickHandler(this.#handleFilmCardClick);
     this.#filmCardComponent.setToWatchListButtonClickHandler(this.#handleToWatchListClick);
@@ -68,11 +63,11 @@ export default class FilmCardPresenter {
     }
 
     const filmCard = this.#movies.find((film) => film.id.toString() === filmCardId);
-    this.#filmCardDetailComponent.init(filmCard);
+    this.#filmCardDetailPresenter.init(filmCard);
   };
 
   destroy = () => {
     remove(this.#filmCardComponent);
-    remove(this.#filmCardDetailComponent);
+    remove(this.#filmCardDetailPresenter);
   };
 }
