@@ -84,7 +84,7 @@ export default class FilmCardView extends AbstractView {
 
   #toWatchListButtonClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.toWatchListButtonClick();
+    this._callback.toWatchListButtonClick(evt);
   };
 
   setWatchedButtonClickHandler = (callback) => {
@@ -96,7 +96,7 @@ export default class FilmCardView extends AbstractView {
 
   #watchedButtonClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.watchedButtonClick();
+    this._callback.watchedButtonClick(evt);
   };
 
   setFavoriteButtonClickHandler = (callback) => {
@@ -108,7 +108,7 @@ export default class FilmCardView extends AbstractView {
 
   #favoriteButtonClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.favoriteButtonClick();
+    this._callback.favoriteButtonClick(evt);
   };
 
   setFilmCardClickHandler = (callback) => {

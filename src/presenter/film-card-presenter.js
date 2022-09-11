@@ -39,19 +39,19 @@ export default class FilmCardPresenter {
     remove(prevFilmCardComponent);
   };
 
-  #handleToWatchListClick = () => {
+  #handleToWatchListClick = (evt) => {
     this.#movie.userDetails = {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist};
-    this.#changeData(this.#movie);
+    this.#changeData(this.#movie, evt);
   };
 
-  #handleWatchedClick = () => {
+  #handleWatchedClick = (evt) => {
     this.#movie.userDetails = {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched};
-    this.#changeData(this.#movie);
+    this.#changeData(this.#movie, evt);
   };
 
-  #handleFavoriteClick = () => {
+  #handleFavoriteClick = (evt) => {
     this.#movie.userDetails = {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite};
-    this.#changeData(this.#movie);
+    this.#changeData(this.#movie, evt);
   };
 
   // Обработчик отрисовывает попап с комментариями
@@ -63,7 +63,7 @@ export default class FilmCardPresenter {
     }
 
     const filmCard = this.#movies.find((film) => film.id.toString() === filmCardId);
-    this.#filmCardDetailPresenter.init(filmCard);
+    this.#filmCardDetailPresenter.init(filmCard, evt);
   };
 
   destroy = () => {

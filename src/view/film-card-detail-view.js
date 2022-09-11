@@ -181,6 +181,8 @@ export default class FilmCardDetailView extends AbstractView {
 
   getCommentsList = () => this.element.querySelector('.film-details__comments-list');
 
+  isFilmCardControlButton = (evt) => evt.target.classList.contains('film-card__controls-item');
+
   setCloseButtonHandler = (callback) => {
     this._callback.closeButtonClik = callback;
     this
@@ -203,7 +205,7 @@ export default class FilmCardDetailView extends AbstractView {
 
   #watchListButtonClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.toWatchedListButtonClick();
+    this._callback.toWatchedListButtonClick(evt);
   };
 
   setWatchedButtonClickHandler = (callback) => {
@@ -216,7 +218,7 @@ export default class FilmCardDetailView extends AbstractView {
 
   #watchedButtonClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.watchedButtonClick();
+    this._callback.watchedButtonClick(evt);
   };
 
   setFavoriteButtonClickHandler = (callback) => {
@@ -229,7 +231,7 @@ export default class FilmCardDetailView extends AbstractView {
 
   #favoriteButtonClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.favoriteButtonClick();
+    this._callback.favoriteButtonClick(evt);
   };
 
   changeBodyClass = () => document.body.classList.toggle('hide-overflow');

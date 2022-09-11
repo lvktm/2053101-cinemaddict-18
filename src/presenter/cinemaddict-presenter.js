@@ -54,7 +54,8 @@ export default class CinemaddictPresenter {
     const filmCardDetailPresenter = new FilmCardDetailPresenter(
       this.#filmsListContainerComponent.element,
       this.#comments,
-      this.#changeData
+      this.#changeData,
+      this.#handleModeChange
     );
 
     const filmCardPresenter = new FilmCardPresenter(
@@ -67,6 +68,10 @@ export default class CinemaddictPresenter {
     filmCardPresenter.init(movie);
     this.#moviePresenters.set(movie.id, filmCardPresenter);
     this.#movieDetailPresenters.set(movie.id, filmCardDetailPresenter);
+  };
+
+  #handleModeChange = () => {
+    this.#movieDetailPresenters.forEach((presenter) => presenter.resetView());
   };
 
   #renderFilmCards = (from, to) => {
@@ -93,10 +98,10 @@ export default class CinemaddictPresenter {
     }
   };
 
-  #changeData = (updatedFilmCard) => {
+  #changeData = (updatedFilmCard, evt) => {
     this.#movies = updateItem(this.#movies, updatedFilmCard);
     this.#moviePresenters.get(updatedFilmCard.id).init(updatedFilmCard);
-    this.#movieDetailPresenters.get(updatedFilmCard.id).init(updatedFilmCard);
+    this.#movieDetailPresenters.get(updatedFilmCard.id).init(updatedFilmCard, evt);
   };
 
   #renderFilmBoard = () => {

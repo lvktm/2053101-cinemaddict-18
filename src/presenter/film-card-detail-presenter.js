@@ -3,6 +3,11 @@ import FilmCardDetailView from '../view/film-card-detail-view.js';
 import { isEsc } from '../util.js';
 import { render, remove, replace } from '../framework/render.js';
 
+const Mode = {
+  POPUPOPENED: 'POPUPOPENED',
+  DEFAULT: 'DEFAULT'
+};
+
 export default class FilmCardDetailPresenter {
   #container = null;
   #movie = null;
@@ -11,14 +16,17 @@ export default class FilmCardDetailPresenter {
   #filmCardDetailComponent = null;
   #changeData = null;
   #prevFilmCardDetailComponent = null;
+  #mode = Mode.DEFAULT;
+  #changeMode = null;
 
-  constructor(container, comments, changeData) {
+  constructor(container, comments, changeData, changeMode) {
     this.#container = container;
     this.#comments = comments;
     this.#changeData = changeData;
+    this.#changeMode = changeMode;
   }
 
-  init = (movie) => {
+  init = (movie, evt) => {
     this.#movie = movie;
     this.#prevFilmCardDetailComponent = this.#filmCardDetailComponent;
 
@@ -29,20 +37,28 @@ export default class FilmCardDetailPresenter {
     this.#filmCardDetailComponent.setWatchedButtonClickHandler(this.#handleWatchedDetailClick);
     this.#filmCardDetailComponent.setFavoriteButtonClickHandler(this.#handleFavoriteDetailClick);
 
-    if(this.#prevFilmCardDetailComponent === null) {
-      render(this.#filmCardDetailComponent, this.#container);
-      this.#renderComments();
+    const isLittleControlButton = this.#filmCardDetailComponent.isFilmCardControlButton(evt);
 
-      this.#filmCardDetailComponent.changeBodyClass();
-
-      document.addEventListener('keydown', this.#handleEscKeyDown);
+    if(this.#mode === Mode.DEFAULT && !isLittleControlButton) {
+      this.#renderFilmCardDetail();
       return;
     }
 
-    if(this.#container.contains(this.#prevFilmCardDetailComponent.element)) {
+    if(this.#mode === Mode.POPUPOPENED) {
       replace(this.#filmCardDetailComponent, this.#prevFilmCardDetailComponent);
       this.#renderComments();
     }
+
+    remove(this.#prevFilmCardDetailComponent);
+  };
+
+  #renderFilmCardDetail = () => {
+    this.#changeMode();
+    render(this.#filmCardDetailComponent, this.#container);
+    this.#renderComments();
+    this.#filmCardDetailComponent.changeBodyClass();
+    document.addEventListener('keydown', this.#handleEscKeyDown);
+    this.#mode = Mode.POPUPOPENED;
   };
 
   #renderComments = () => {
@@ -54,23 +70,23 @@ export default class FilmCardDetailPresenter {
     });
   };
 
-  #handleToWatchListDetailClick = () => {
+  #handleToWatchListDetailClick = (evt) => {
     this.#movie.userDetails = {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist};
-    this.#changeData(this.#movie);
+    this.#changeData(this.#movie, evt);
   };
 
-  #handleWatchedDetailClick = () => {
+  #handleWatchedDetailClick = (evt) => {
     this.#movie.userDetails = {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched};
-    this.#changeData(this.#movie);
+    this.#changeData(this.#movie, evt);
   };
 
-  #handleFavoriteDetailClick = () => {
+  #handleFavoriteDetailClick = (evt) => {
     this.#movie.userDetails = {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite};
-    this.#changeData(this.#movie);
+    this.#changeData(this.#movie, evt);
   };
 
   #handleCloseButtonClick = () => {
-    this.#closeFilmCardDetail();
+    this.closeFilmCardDetail();
   };
 
   #handleEscKeyDown = (evt) => {
@@ -78,14 +94,21 @@ export default class FilmCardDetailPresenter {
       return;
     }
     evt.preventDefault();
-    this.#closeFilmCardDetail();
+    this.closeFilmCardDetail();
   };
 
-  #closeFilmCardDetail = () => {
+  resetView = () => {
+    if(this.#mode !== Mode.DEFAULT) {
+      this.closeFilmCardDetail();
+    }
+  };
+
+  closeFilmCardDetail = () => {
     document.removeEventListener('keydown', this.#handleEscKeyDown);
     this.#filmCardDetailComponent.changeBodyClass();
     remove(this.#filmCardDetailComponent);
     this.#filmCardDetailComponent = null;
+    this.#mode = Mode.DEFAULT;
   };
 
 }
