@@ -1,119 +1,126 @@
-import CommentsView from '../view/comments-view.js';
 import EmptyMessageView from '../view/empty-message-view.js';
-import FilmCardDetailView from '../view/film-card-detail-view.js';
-import FilmCardView from '../view/film-card-view.js';
+import FilmCardDetailPresenter from './film-card-detail-presenter.js';
 import FilmsListContainerView from '../view/films-list-container-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import FilmsTemplateView from '../view/films-template-view.js';
 import FilterView from '../view/filter-view.js';
-import { isEsc } from '../util.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import SortView from '../view/sort-view.js';
-import { render } from '../framework/render.js';
+import { render, remove } from '../framework/render.js';
+import FilmCardPresenter from './film-card-presenter.js';
+import { updateItem } from '../util.js';
 
 const FILM_COUNT_PER_STEP = 5;
 
-// Добавляет слушателей и к ним обработчики для работы с попапом
-const addListeners = (filmCardDetailComponent) => {
-  // Обработчик на ESC для закрытия попапа
-  const onFilmCardDetailEscKeydown = (evt) => {
-    if(isEsc(evt)) {
-      evt.preventDefault();
-      closeFilmCardDetail(filmCardDetailComponent);
-    }
-  };
-
-  // Обработчик на click по кнопке закрытия попапа
-  const onFilmCardDetailCloseButtonClick = () => {
-    closeFilmCardDetail(filmCardDetailComponent);
-  };
-
-  // Добавляет слушателя на кропку закрытия
-  const closeFilmCardDetailButton = filmCardDetailComponent.element.querySelector('.film-details__close-btn');
-  closeFilmCardDetailButton.addEventListener('click', onFilmCardDetailCloseButtonClick);
-  document.addEventListener('keydown', onFilmCardDetailEscKeydown);
-
-  // Функция закрытия попапа
-  function closeFilmCardDetail() {
-    document.removeEventListener('keydown', onFilmCardDetailEscKeydown);
-    filmCardDetailComponent.element.remove();
-    document.body.classList.remove('hide-overflow');
-  }
-};
-
 export default class CinemaddictPresenter {
+  #cinemaddictContainer = null;
+  #movieModel = null;
+  #commentsModel = null;
+  #movies = null;
+  #comments = null;
+
   #filmsComponent = new FilmsTemplateView();
   #filmsListComponent = new FilmsListView();
   #filmsListContainerComponent = new FilmsListContainerView();
   #showMoreButton = new ShowMoreButtonView();
   #renderedMovies = FILM_COUNT_PER_STEP;
+  #moviePresenters = new Map();
+  #movieDetailPresenters = new Map();
 
   constructor(cinemaddictContainer, movieModel, commentsModel) {
-    this.cinemaddictContainer = cinemaddictContainer;
-    this.movieModel = movieModel;
-    this.movies = [...this.movieModel.allMovies];
-    this.commentsModel = commentsModel;
-    this.comments = [...this.commentsModel.comments];
+    this.#cinemaddictContainer = cinemaddictContainer;
+    this.#movieModel = movieModel;
+    this.#commentsModel = commentsModel;
   }
 
-  // Обработчик отрисовывает попап с комментариями
-  #onFilmCardClick = (evt) => {
-    const currentElement = evt.target;
-    if(currentElement.classList.contains('film-card__poster')) {
-      for(let i = 0; i < this.movies.length; i++) {
+  init = () => {
+    this.#movies = [...this.#movieModel.allMovies];
+    this.#comments = [...this.#commentsModel.comments];
 
-        if(this.movies[i].id.toString() === currentElement.closest('.film-card').dataset.id) {
-          const filmCardDetailComponent = new FilmCardDetailView(this.movies[i]);
-          render(filmCardDetailComponent, this.cinemaddictContainer);
-
-          const commentsList = document.querySelector('.film-details__comments-list');
-
-          for(let j = 0; j < this.movies[i].comments.length; j++) {
-            const filmCommentsComponent = new CommentsView(this.movies[i].comments[j], this.comments);
-            render(filmCommentsComponent, commentsList);
-          }
-
-          document.body.classList.add('hide-overflow');
-
-          addListeners(filmCardDetailComponent);
-        }
-      }
-    }
+    this.#renderFilmBoard();
   };
 
-  #onShowMoreButtonClick = () => {
-    this.movies
+  #renderFilter = () => render(new FilterView(), this.#cinemaddictContainer);
+
+  #renderSort = () => render(new SortView(), this.#cinemaddictContainer);
+
+  #renderFilmsListContainer = () => {
+    render(this.#filmsComponent, this.#cinemaddictContainer);
+    render(this.#filmsListComponent, this.#filmsComponent.element);
+    render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
+  };
+
+  #renderFilmCard = (movie) => {
+    const filmCardDetailPresenter = new FilmCardDetailPresenter(
+      this.#filmsListContainerComponent.element,
+      this.#comments,
+      this.#changeData,
+      this.#handleModeChange
+    );
+
+    const filmCardPresenter = new FilmCardPresenter(
+      filmCardDetailPresenter,
+      this.#movies,
+      this.#filmsListContainerComponent.element,
+      this.#changeData
+    );
+
+    filmCardPresenter.init(movie);
+    this.#moviePresenters.set(movie.id, filmCardPresenter);
+    this.#movieDetailPresenters.set(movie.id, filmCardDetailPresenter);
+  };
+
+  #handleModeChange = () => {
+    this.#movieDetailPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #renderFilmCards = (from, to) => {
+    this.#movies
+      .slice(from, to)
+      .forEach((movie) => this.#renderFilmCard(movie));
+  };
+
+  #renderShowMoreButton = () => {
+    render(this.#showMoreButton, this.#cinemaddictContainer);
+    this.#showMoreButton.setClickHandler(this.#handleShowMoreButtonClick);
+  };
+
+  #handleShowMoreButtonClick = () => {
+    this.#movies
       .slice(this.#renderedMovies, this.#renderedMovies + FILM_COUNT_PER_STEP)
-      .forEach((movie) => {
-        render(new FilmCardView(movie), this.#filmsListContainerComponent.element);
-      });
+      .forEach((movie) => this.#renderFilmCard(movie));
 
     this.#renderedMovies += FILM_COUNT_PER_STEP;
 
-    if(this.#renderedMovies >= this.movies.length) {
-      this.#showMoreButton.element.style.display = 'none';
+    if(this.#renderedMovies >= this.#movies.length) {
+      remove(this.#showMoreButton);
       render (new EmptyMessageView(), this.#filmsListContainerComponent.element.parentNode);
     }
   };
 
-  init = () => {
-    render(new FilterView(), this.cinemaddictContainer);
-    render(new SortView(), this.cinemaddictContainer);
-    render(this.#filmsComponent, this.cinemaddictContainer);
-    render(this.#filmsListComponent, this.#filmsComponent.element);
-    render(this.#filmsListContainerComponent, this.#filmsListComponent.element);
-
-    // Отрисовывает 5 фильмов при загрузке страницы
-    for(let i = 0; i < FILM_COUNT_PER_STEP; i++) {
-      render(new FilmCardView(this.movies[i]), this.#filmsListContainerComponent.element);
-    }
-
-    render(this.#showMoreButton, this.cinemaddictContainer);
-
-    // Добавляет обработчик на клик на контейнер с фильмами
-    this.#filmsComponent.setClickHandler(this.#onFilmCardClick);
-
-    // Добавляет обработчик на клик на кнопку show more
-    this.#showMoreButton.setClickHandler(this.#onShowMoreButtonClick);
+  #changeData = (updatedFilmCard, evt) => {
+    this.#movies = updateItem(this.#movies, updatedFilmCard);
+    this.#moviePresenters.get(updatedFilmCard.id).init(updatedFilmCard);
+    this.#movieDetailPresenters.get(updatedFilmCard.id).init(updatedFilmCard, evt);
   };
+
+  #renderFilmBoard = () => {
+    this.#renderFilter();
+
+    this.#renderSort();
+
+    this.#renderFilmsListContainer();
+
+    this.#renderFilmCards(0, FILM_COUNT_PER_STEP);
+
+    this.#renderShowMoreButton();
+  };
+
+  #clearFilmList = () => {
+    this.#moviePresenters.forEach((presenter) => presenter.destroy());
+    this.#moviePresenters.clear();
+    this.#renderedMovies = FILM_COUNT_PER_STEP;
+    this.#renderShowMoreButton();
+  };
+
 }
