@@ -70,19 +70,19 @@ export default class FilmCardDetailPresenter {
     });
   };
 
-  #handleToWatchListDetailClick = (evt) => {
-    this.#movie.userDetails = {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist};
-    this.#changeData(this.#movie, evt);
+  #handleToWatchListDetailClick = (evt, movie) => {
+    this.#movie.userDetails = {...movie.userDetails, watchlist: !this.#movie.userDetails.watchlist};
+    this.#changeData(movie, evt);
   };
 
-  #handleWatchedDetailClick = (evt) => {
-    this.#movie.userDetails = {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched};
-    this.#changeData(this.#movie, evt);
+  #handleWatchedDetailClick = (evt, movie) => {
+    this.#movie.userDetails = {...movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched};
+    this.#changeData(movie, evt);
   };
 
-  #handleFavoriteDetailClick = (evt) => {
-    this.#movie.userDetails = {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite};
-    this.#changeData(this.#movie, evt);
+  #handleFavoriteDetailClick = (evt, movie) => {
+    this.#movie.userDetails = {...movie.userDetails, favorite: !this.#movie.userDetails.favorite};
+    this.#changeData(movie, evt);
   };
 
   #handleCloseButtonClick = () => {
