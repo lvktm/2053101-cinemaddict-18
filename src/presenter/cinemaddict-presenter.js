@@ -6,7 +6,7 @@ import FilmsTemplateView from '../view/films-template-view.js';
 import FilterView from '../view/filter-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import SortView from '../view/sort-view.js';
-import { render, remove } from '../framework/render.js';
+import { render, remove, replace } from '../framework/render.js';
 import FilmCardPresenter from './film-card-presenter.js';
 import { updateItem } from '../util.js';
 import { generateFilter } from '../mock/filter.js';
@@ -19,6 +19,7 @@ export default class CinemaddictPresenter {
   #commentsModel = null;
   #movies = null;
   #comments = null;
+  #filterViewComponent = null;
 
   #filmsComponent = new FilmsTemplateView();
   #filmsListComponent = new FilmsListView();
@@ -41,7 +42,16 @@ export default class CinemaddictPresenter {
     this.#renderFilmBoard();
   };
 
-  #renderFilter = () => render(new FilterView(generateFilter(this.#movies)), this.#cinemaddictContainer);
+  #renderFilter = () => {
+    const prevFilterViewComponent = this.#filterViewComponent;
+    this.#filterViewComponent = new FilterView(generateFilter(this.#movies));
+
+    if(prevFilterViewComponent === null) {
+      render(this.#filterViewComponent, this.#cinemaddictContainer);
+    } else {
+      replace(this.#filterViewComponent, prevFilterViewComponent);
+    }
+  };
 
   #renderSort = () => render(new SortView(), this.#cinemaddictContainer);
 

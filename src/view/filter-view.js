@@ -4,9 +4,7 @@ const createFilterItemTemplate = (filterItem) => {
   const {name, count} = filterItem;
 
   return (`
-    
     <a href="#${name}" class="main-navigation__item">${name} <span class="main-navigation__item-count">${count}</span></a>
-
   `);
 };
 
