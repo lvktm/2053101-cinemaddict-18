@@ -9,6 +9,7 @@ import SortView from '../view/sort-view.js';
 import { render, remove } from '../framework/render.js';
 import FilmCardPresenter from './film-card-presenter.js';
 import { updateItem } from '../util.js';
+import { generateFilter } from '../mock/filter.js';
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -40,7 +41,7 @@ export default class CinemaddictPresenter {
     this.#renderFilmBoard();
   };
 
-  #renderFilter = () => render(new FilterView(), this.#cinemaddictContainer);
+  #renderFilter = () => render(new FilterView(generateFilter(this.#movies)), this.#cinemaddictContainer);
 
   #renderSort = () => render(new SortView(), this.#cinemaddictContainer);
 
@@ -102,6 +103,7 @@ export default class CinemaddictPresenter {
     this.#movies = updateItem(this.#movies, updatedFilmCard);
     this.#moviePresenters.get(updatedFilmCard.id).init(updatedFilmCard);
     this.#movieDetailPresenters.get(updatedFilmCard.id).init(updatedFilmCard, evt);
+    this.#renderFilter();
   };
 
   #renderFilmBoard = () => {
