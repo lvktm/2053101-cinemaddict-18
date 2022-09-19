@@ -8,8 +8,9 @@ import ShowMoreButtonView from '../view/show-more-button-view.js';
 import SortView from '../view/sort-view.js';
 import { render, remove, replace } from '../framework/render.js';
 import FilmCardPresenter from './film-card-presenter.js';
-import { updateItem } from '../util.js';
+import { updateItem, sortMovieByRating, sortMovieByDate } from '../util.js';
 import { generateFilter } from '../mock/filter.js';
+import { SortType } from '../mock/const.js';
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -20,6 +21,7 @@ export default class CinemaddictPresenter {
   #movies = null;
   #comments = null;
   #filterViewComponent = null;
+  #sortComponent = null;
 
   #filmsComponent = new FilmsTemplateView();
   #filmsListComponent = new FilmsListView();
@@ -28,6 +30,8 @@ export default class CinemaddictPresenter {
   #renderedMovies = FILM_COUNT_PER_STEP;
   #moviePresenters = new Map();
   #movieDetailPresenters = new Map();
+  #currentSortType = SortType.DEFAULT;
+  #sourcedMovies = [];
 
   constructor(cinemaddictContainer, movieModel, commentsModel) {
     this.#cinemaddictContainer = cinemaddictContainer;
@@ -38,7 +42,7 @@ export default class CinemaddictPresenter {
   init = () => {
     this.#movies = [...this.#movieModel.allMovies];
     this.#comments = [...this.#commentsModel.comments];
-
+    this.#sourcedMovies = [...this.#movies];
     this.#renderFilmBoard();
   };
 
@@ -53,7 +57,43 @@ export default class CinemaddictPresenter {
     }
   };
 
-  #renderSort = () => render(new SortView(), this.#cinemaddictContainer);
+  #sortTasks = (sortType) => {
+    switch (sortType) {
+      case SortType.DATE:
+        this.#movies.sort(sortMovieByDate);
+        break;
+      case SortType.RATING:
+        this.#movies.sort(sortMovieByRating);
+        break;
+      default:
+        this.#movies = [...this.#sourcedMovies];
+    }
+
+    this.#currentSortType = sortType;
+  };
+
+  #handleSortTypeChange = (sortType) => {
+
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortTasks(sortType);
+    this.#clearFilmList();
+    this.#renderFilmBoard();
+  };
+
+  #renderSort = () => {
+    const prevSortComponent = this.#sortComponent;
+    this.#sortComponent = new SortView(this.#currentSortType);
+
+    if(prevSortComponent === null) {
+      render(this.#sortComponent, this.#cinemaddictContainer);
+    } else {
+      replace(this.#sortComponent, prevSortComponent);
+    }
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
+  };
 
   #renderFilmsListContainer = () => {
     render(this.#filmsComponent, this.#cinemaddictContainer);
@@ -111,6 +151,7 @@ export default class CinemaddictPresenter {
 
   #changeData = (updatedFilmCard, evt) => {
     this.#movies = updateItem(this.#movies, updatedFilmCard);
+    this.#sourcedMovies = updateItem(this.#sourcedMovies, updatedFilmCard);
     this.#moviePresenters.get(updatedFilmCard.id).init(updatedFilmCard);
     this.#movieDetailPresenters.get(updatedFilmCard.id).init(updatedFilmCard, evt);
     this.#renderFilter();

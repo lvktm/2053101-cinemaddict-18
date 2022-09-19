@@ -116,9 +116,14 @@ const FilterType = {
   FAVORITES: 'Favorites'
 };
 
+const SortType = {
+  DEFAULT: 'default',
+  DATE: 'date',
+  RATING: 'rating',
+};
 
 export {titles, posters, descriptions,
   ageRatings, directors, writers, actors,
   countries, releaseDates, watchingDateMinutesAgo, genres,
-  comments, authors, emotions, FilterType};
+  comments, authors, emotions, FilterType, SortType};
 

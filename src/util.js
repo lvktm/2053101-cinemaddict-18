@@ -74,6 +74,10 @@ const filter = {
   [FilterType.FAVORITES]: (movies) => movies.filter((movie) => isFavorite(movie))
 };
 
+const sortMovieByRating = (movieA, movieB) => movieB.filmInfo.totalRating - movieA.filmInfo.totalRating;
+
+const sortMovieByDate = (movieA, movieB) => dayjs(movieB.filmInfo.release.date).diff(movieA.filmInfo.release.date);
+
 export {getRandomInteger,
   humanizeReleaseDate,
   humanizeReleaseDateDetail,
@@ -85,5 +89,7 @@ export {getRandomInteger,
   isEsc,
   isTrueOrFalse,
   updateItem,
-  filter
+  filter,
+  sortMovieByRating,
+  sortMovieByDate
 };

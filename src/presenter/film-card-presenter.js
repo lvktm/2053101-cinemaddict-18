@@ -68,6 +68,6 @@ export default class FilmCardPresenter {
 
   destroy = () => {
     remove(this.#filmCardComponent);
-    remove(this.#filmCardDetailPresenter);
+    // remove(this.#filmCardDetailPresenter);
   };
 }
