@@ -36,6 +36,7 @@ export default class FilmCardDetailPresenter {
     this.#filmCardDetailComponent.setToWatchListButtonClickHandler(this.#handleToWatchListDetailClick);
     this.#filmCardDetailComponent.setWatchedButtonClickHandler(this.#handleWatchedDetailClick);
     this.#filmCardDetailComponent.setFavoriteButtonClickHandler(this.#handleFavoriteDetailClick);
+    // this.#filmCardDetailComponent.setFilmDetailEmojiListClickHandler(this.#handleEmojiClick);
 
     const isLittleControlButton = this.#filmCardDetailComponent.isFilmCardControlButton(evt);
 
@@ -70,6 +71,14 @@ export default class FilmCardDetailPresenter {
     });
   };
 
+  // #handleEmojiClick = (choosenEmoji, radios) => {
+  //   for(const radio of radios) {
+  //     if(radio.id === choosenEmoji){
+  //       radio.checked = true;
+  //     }
+  //   }
+  // };
+
   #handleToWatchListDetailClick = (evt, movie) => {
     this.#movie.userDetails = {...movie.userDetails, watchlist: !this.#movie.userDetails.watchlist};
     this.#changeData(movie, evt);
@@ -86,7 +95,7 @@ export default class FilmCardDetailPresenter {
   };
 
   #handleCloseButtonClick = () => {
-    this.closeFilmCardDetail();
+    this.#closeFilmCardDetail();
   };
 
   #handleEscKeyDown = (evt) => {
@@ -94,16 +103,16 @@ export default class FilmCardDetailPresenter {
       return;
     }
     evt.preventDefault();
-    this.closeFilmCardDetail();
+    this.#closeFilmCardDetail();
   };
 
   resetView = () => {
     if(this.#mode !== Mode.DEFAULT) {
-      this.closeFilmCardDetail();
+      this.#closeFilmCardDetail();
     }
   };
 
-  closeFilmCardDetail = () => {
+  #closeFilmCardDetail = () => {
     document.removeEventListener('keydown', this.#handleEscKeyDown);
     this.#filmCardDetailComponent.changeBodyClass();
     remove(this.#filmCardDetailComponent);

@@ -1,8 +1,8 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeReleaseDateDetail, formatMinutesToTime } from '../util.js';
 
-const createFilmDetailsNewComment = () => (
-  `<form class="film-details__new-comment" action="" method="get">
+const createFilmDetailsNewComment = () => (`
+<form class="film-details__new-comment" action="" method="get">
     <div class="film-details__add-emoji-label"><img src="./images/emoji/smile.png" width="55" height="55" alt="emoji-smile"></div>
 
     <label class="film-details__comment-label">
@@ -31,8 +31,7 @@ const createFilmDetailsNewComment = () => (
       </label>
     </div>
 </form>
-  `
-);
+`);
 
 const createFilmCardDetail = (movie) => {
   const {comments,
@@ -178,11 +177,14 @@ export default class FilmCardDetailView extends AbstractStatefulView {
 
   constructor(movie) {
     super();
-    this.movie = movie;
+    this._state = FilmCardDetailView.parseMovieToState(movie);
+
+    this.#setInnerHandlers();
+
   }
 
   get template() {
-    return createFilmCardDetail(this.movie);
+    return createFilmCardDetail(this._state);
   }
 
   getCommentsList = () => this.element.querySelector('.film-details__comments-list');
@@ -211,7 +213,7 @@ export default class FilmCardDetailView extends AbstractStatefulView {
 
   #watchListButtonClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.toWatchedListButtonClick(evt, this.movie);
+    this._callback.toWatchedListButtonClick(evt, this._state);
   };
 
   setWatchedButtonClickHandler = (callback) => {
@@ -224,7 +226,7 @@ export default class FilmCardDetailView extends AbstractStatefulView {
 
   #watchedButtonClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.watchedButtonClick(evt, this.movie);
+    this._callback.watchedButtonClick(evt, this._state);
   };
 
   setFavoriteButtonClickHandler = (callback) => {
@@ -237,17 +239,16 @@ export default class FilmCardDetailView extends AbstractStatefulView {
 
   #favoriteButtonClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.favoriteButtonClick(evt, this.movie);
+    this._callback.favoriteButtonClick(evt, this._state);
   };
 
   changeBodyClass = () => document.body.classList.toggle('hide-overflow');
 
-  setFilmDetailEmojiListClickHandler = () => {
-    this
-      .element
-      .querySelector('.film-details__emoji-list')
-      .addEventListener('click', this.#emojiListClickHandler);
-  };
+  static parseMovieToState = (movie) => ({...movie
+  });
+
+  static parseStateToMovie = (state) => ({...state});
+
 
   #emojiListClickHandler = (evt) => {
     evt.preventDefault();
@@ -256,14 +257,35 @@ export default class FilmCardDetailView extends AbstractStatefulView {
       return;
     }
 
-    const choosenSmiley = evt.target.parentElement.getAttribute('for');
+    const choosenEmoji = evt.target.parentElement.getAttribute('for');
     const emojiList = document.querySelector('.film-details__emoji-list');
     const radios = emojiList.querySelectorAll('input[type="radio"]');
 
     for(const radio of radios) {
-      if(radio.id === choosenSmiley){
+      if(radio.id === choosenEmoji){
         radio.checked = true;
+        this.updateElement({
+          radioButton: radio.value,
+        });
+        console.log(this._state);
       }
     }
+
   };
+
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setCloseButtonHandler(this._callback.closeButtonClik);
+    this.setToWatchListButtonClickHandler( this._callback.toWatchedListButtonClick);
+    this.setWatchedButtonClickHandler(this._callback.watchedButtonClick);
+    this.setFavoriteButtonClickHandler(this._callback.favoriteButtonClick);
+  };
+
+  #setInnerHandlers = () => {
+    this
+      .element
+      .querySelector('.film-details__emoji-list')
+      .addEventListener('click', this.#emojiListClickHandler);
+  };
+
 }

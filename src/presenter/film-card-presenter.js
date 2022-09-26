@@ -54,7 +54,6 @@ export default class FilmCardPresenter {
     this.#changeData(this.#movie, evt);
   };
 
-  // Обработчик отрисовывает попап с комментариями
   #handleFilmCardClick = (evt) => {
     const filmCardId = this.#filmCardComponent.getFilmCardId(evt);
 
@@ -68,6 +67,5 @@ export default class FilmCardPresenter {
 
   destroy = () => {
     remove(this.#filmCardComponent);
-    // remove(this.#filmCardDetailPresenter);
   };
 }
