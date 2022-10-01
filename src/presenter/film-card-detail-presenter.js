@@ -30,13 +30,12 @@ export default class FilmCardDetailPresenter {
     this.#movie = movie;
     this.#prevFilmCardDetailComponent = this.#filmCardDetailComponent;
 
-    this.#filmCardDetailComponent = new FilmCardDetailView(this.#movie);
+    this.#filmCardDetailComponent = new FilmCardDetailView(this.#movie, this.#renderComments);
 
     this.#filmCardDetailComponent.setCloseButtonHandler(this.#handleCloseButtonClick);
     this.#filmCardDetailComponent.setToWatchListButtonClickHandler(this.#handleToWatchListDetailClick);
     this.#filmCardDetailComponent.setWatchedButtonClickHandler(this.#handleWatchedDetailClick);
     this.#filmCardDetailComponent.setFavoriteButtonClickHandler(this.#handleFavoriteDetailClick);
-    // this.#filmCardDetailComponent.setFilmDetailEmojiListClickHandler(this.#handleEmojiClick);
 
     const isLittleControlButton = this.#filmCardDetailComponent.isFilmCardControlButton(evt);
 
@@ -55,10 +54,15 @@ export default class FilmCardDetailPresenter {
 
   #renderFilmCardDetail = () => {
     this.#changeMode();
+
     render(this.#filmCardDetailComponent, this.#container);
+
     this.#renderComments();
+
     this.#filmCardDetailComponent.changeBodyClass();
+
     document.addEventListener('keydown', this.#handleEscKeyDown);
+
     this.#mode = Mode.POPUPOPENED;
   };
 
@@ -71,26 +75,18 @@ export default class FilmCardDetailPresenter {
     });
   };
 
-  // #handleEmojiClick = (choosenEmoji, radios) => {
-  //   for(const radio of radios) {
-  //     if(radio.id === choosenEmoji){
-  //       radio.checked = true;
-  //     }
-  //   }
-  // };
-
   #handleToWatchListDetailClick = (evt, movie) => {
-    this.#movie.userDetails = {...movie.userDetails, watchlist: !this.#movie.userDetails.watchlist};
+    movie.userDetails = {...movie.userDetails, watchlist: !movie.userDetails.watchlist};
     this.#changeData(movie, evt);
   };
 
   #handleWatchedDetailClick = (evt, movie) => {
-    this.#movie.userDetails = {...movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched};
+    movie.userDetails = {...movie.userDetails, alreadyWatched: !movie.userDetails.alreadyWatched};
     this.#changeData(movie, evt);
   };
 
   #handleFavoriteDetailClick = (evt, movie) => {
-    this.#movie.userDetails = {...movie.userDetails, favorite: !this.#movie.userDetails.favorite};
+    movie.userDetails = {...movie.userDetails, favorite: !movie.userDetails.favorite};
     this.#changeData(movie, evt);
   };
 
