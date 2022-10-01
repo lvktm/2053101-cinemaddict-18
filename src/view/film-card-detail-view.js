@@ -204,12 +204,10 @@ const createFilmCardDetail = (movie) => {
 };
 
 export default class FilmCardDetailView extends AbstractStatefulView {
-  #movie = null;
   #renderComments = null;
 
   constructor(movie, renderComments) {
     super();
-    this.#movie = movie;
     this.#renderComments = renderComments;
     this._state = FilmCardDetailView.parseMovieToState(movie);
 
@@ -246,6 +244,7 @@ export default class FilmCardDetailView extends AbstractStatefulView {
 
   #watchListButtonClickHandler = (evt) => {
     evt.preventDefault();
+    this._setState({scrollPosition: this.element.scrollTop});
     this._callback.toWatchedListButtonClick(evt, this._state);
   };
 
@@ -259,6 +258,7 @@ export default class FilmCardDetailView extends AbstractStatefulView {
 
   #watchedButtonClickHandler = (evt) => {
     evt.preventDefault();
+    this._setState({scrollPosition: this.element.scrollTop});
     this._callback.watchedButtonClick(evt, this._state);
   };
 
@@ -272,6 +272,7 @@ export default class FilmCardDetailView extends AbstractStatefulView {
 
   #favoriteButtonClickHandler = (evt) => {
     evt.preventDefault();
+    this._setState({scrollPosition: this.element.scrollTop});
     this._callback.favoriteButtonClick(evt, this._state);
   };
 
@@ -295,11 +296,18 @@ export default class FilmCardDetailView extends AbstractStatefulView {
 
     this.updateElement({
       selectedButton: emoji,
+      scrollPosition: this.element.scrollTop
     });
 
     this.#renderComments();
 
     this.#selecetRadioButton(emoji);
+
+    this.setScrollPosititon();
+  };
+
+  setScrollPosititon = () => {
+    this.element.scrollTop = this._state.scrollPosition;
   };
 
   #selecetRadioButton = (buttonId) => {

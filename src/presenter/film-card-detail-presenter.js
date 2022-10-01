@@ -47,6 +47,7 @@ export default class FilmCardDetailPresenter {
     if(this.#mode === Mode.POPUPOPENED) {
       replace(this.#filmCardDetailComponent, this.#prevFilmCardDetailComponent);
       this.#renderComments();
+      this.#filmCardDetailComponent.setScrollPosititon();
     }
 
     remove(this.#prevFilmCardDetailComponent);
