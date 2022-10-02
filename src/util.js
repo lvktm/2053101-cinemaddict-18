@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration'; // ES 2015
 dayjs.extend(duration); // использование плагина
+import { FilterType } from './mock/const.js';
 
 const MINUTES_BEGIN = 0;
 const MINUTES_END = 60;
@@ -63,6 +64,20 @@ const updateItem = (items, update) => {
   ];
 };
 
+const isWatchList = (movie) => movie.userDetails.watchlist;
+const isHistory = (movie) => movie.userDetails.alreadyWatched;
+const isFavorite = (movie) => movie.userDetails.favorite;
+
+const filter = {
+  [FilterType.WATCHLIST]: (movies) => movies.filter((movie) => isWatchList(movie)),
+  [FilterType.HISTORY]: (movies) => movies.filter((movie) => isHistory(movie)),
+  [FilterType.FAVORITES]: (movies) => movies.filter((movie) => isFavorite(movie))
+};
+
+const sortMovieByRating = (movieA, movieB) => movieB.filmInfo.totalRating - movieA.filmInfo.totalRating;
+
+const sortMovieByDate = (movieA, movieB) => dayjs(movieB.filmInfo.release.date).diff(movieA.filmInfo.release.date);
+
 export {getRandomInteger,
   humanizeReleaseDate,
   humanizeReleaseDateDetail,
@@ -73,5 +88,8 @@ export {getRandomInteger,
   getRandomElement,
   isEsc,
   isTrueOrFalse,
-  updateItem
+  updateItem,
+  filter,
+  sortMovieByRating,
+  sortMovieByDate
 };

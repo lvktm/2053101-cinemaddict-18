@@ -30,7 +30,7 @@ export default class FilmCardDetailPresenter {
     this.#movie = movie;
     this.#prevFilmCardDetailComponent = this.#filmCardDetailComponent;
 
-    this.#filmCardDetailComponent = new FilmCardDetailView(this.#movie);
+    this.#filmCardDetailComponent = new FilmCardDetailView(this.#movie, this.#renderComments);
 
     this.#filmCardDetailComponent.setCloseButtonHandler(this.#handleCloseButtonClick);
     this.#filmCardDetailComponent.setToWatchListButtonClickHandler(this.#handleToWatchListDetailClick);
@@ -47,6 +47,7 @@ export default class FilmCardDetailPresenter {
     if(this.#mode === Mode.POPUPOPENED) {
       replace(this.#filmCardDetailComponent, this.#prevFilmCardDetailComponent);
       this.#renderComments();
+      this.#filmCardDetailComponent.setScrollPosititon();
     }
 
     remove(this.#prevFilmCardDetailComponent);
@@ -54,10 +55,15 @@ export default class FilmCardDetailPresenter {
 
   #renderFilmCardDetail = () => {
     this.#changeMode();
+
     render(this.#filmCardDetailComponent, this.#container);
+
     this.#renderComments();
+
     this.#filmCardDetailComponent.changeBodyClass();
+
     document.addEventListener('keydown', this.#handleEscKeyDown);
+
     this.#mode = Mode.POPUPOPENED;
   };
 
@@ -70,23 +76,23 @@ export default class FilmCardDetailPresenter {
     });
   };
 
-  #handleToWatchListDetailClick = (evt) => {
-    this.#movie.userDetails = {...this.#movie.userDetails, watchlist: !this.#movie.userDetails.watchlist};
-    this.#changeData(this.#movie, evt);
+  #handleToWatchListDetailClick = (evt, movie) => {
+    movie.userDetails = {...movie.userDetails, watchlist: !movie.userDetails.watchlist};
+    this.#changeData(movie, evt);
   };
 
-  #handleWatchedDetailClick = (evt) => {
-    this.#movie.userDetails = {...this.#movie.userDetails, alreadyWatched: !this.#movie.userDetails.alreadyWatched};
-    this.#changeData(this.#movie, evt);
+  #handleWatchedDetailClick = (evt, movie) => {
+    movie.userDetails = {...movie.userDetails, alreadyWatched: !movie.userDetails.alreadyWatched};
+    this.#changeData(movie, evt);
   };
 
-  #handleFavoriteDetailClick = (evt) => {
-    this.#movie.userDetails = {...this.#movie.userDetails, favorite: !this.#movie.userDetails.favorite};
-    this.#changeData(this.#movie, evt);
+  #handleFavoriteDetailClick = (evt, movie) => {
+    movie.userDetails = {...movie.userDetails, favorite: !movie.userDetails.favorite};
+    this.#changeData(movie, evt);
   };
 
   #handleCloseButtonClick = () => {
-    this.closeFilmCardDetail();
+    this.#closeFilmCardDetail();
   };
 
   #handleEscKeyDown = (evt) => {
@@ -94,16 +100,16 @@ export default class FilmCardDetailPresenter {
       return;
     }
     evt.preventDefault();
-    this.closeFilmCardDetail();
+    this.#closeFilmCardDetail();
   };
 
   resetView = () => {
     if(this.#mode !== Mode.DEFAULT) {
-      this.closeFilmCardDetail();
+      this.#closeFilmCardDetail();
     }
   };
 
-  closeFilmCardDetail = () => {
+  #closeFilmCardDetail = () => {
     document.removeEventListener('keydown', this.#handleEscKeyDown);
     this.#filmCardDetailComponent.changeBodyClass();
     remove(this.#filmCardDetailComponent);

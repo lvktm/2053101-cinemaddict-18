@@ -109,9 +109,21 @@ const authors = [
 
 const emotions = ['smile', 'sleeping', 'puke', 'angry'];
 
+const FilterType = {
+  All: 'All',
+  WATCHLIST: 'Watchlist',
+  HISTORY: 'History',
+  FAVORITES: 'Favorites'
+};
+
+const SortType = {
+  DEFAULT: 'default',
+  DATE: 'date',
+  RATING: 'rating',
+};
 
 export {titles, posters, descriptions,
   ageRatings, directors, writers, actors,
   countries, releaseDates, watchingDateMinutesAgo, genres,
-  comments, authors, emotions};
+  comments, authors, emotions, FilterType, SortType};
 

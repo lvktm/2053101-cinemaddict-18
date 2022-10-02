@@ -8,6 +8,7 @@ import CommenstModel from './model/comment-model.js';
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const siteFooterElement = document.querySelector('.footer__statistics');
+
 const movieModel = new MovieModel();
 const commentsModel = new CommenstModel(movieModel);
 const cinemaddictPresenter = new CinemaddictPresenter(siteMainElement, movieModel, commentsModel);
